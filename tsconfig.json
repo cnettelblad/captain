@@ -8,6 +8,10 @@
     "outDir": "dist",
     "rootDir": "src",
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "src",
+    "paths": {
+      "Captain/*": ["./*"]
+    }
   }
 }
