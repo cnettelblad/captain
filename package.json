@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "prisma migrate deploy && node dist/index.js",
     "dev": "vite-node src/index.ts --watch",
     "build": "tsc --project tsconfig.json",
     "deploy-commands": "vite-node src/deploy-commands.ts",
@@ -20,13 +20,13 @@
     "discord-api-types": "^0.38.4",
     "discord.js": "^14.19.3",
     "dotenv": "^16.6.1",
-    "node-cron": "^4.2.1"
+    "node-cron": "^4.2.1",
+    "prisma": "^7.2.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.19.5",
     "@types/node-cron": "^3.0.11",
-    "prisma": "^7.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
