@@ -4,7 +4,7 @@ import { prisma } from '#captain/Services/Prisma.js';
 import { env } from 'process';
 
 export default class BirthdayJob extends Job {
-    schedule = '0 9 * * *';
+    schedule = '0 12 * * *';
 
     private birthdayChannelId: string =
         env.NODE_ENV === 'production' ? '1204230847556354098' : '1204231308427919400';

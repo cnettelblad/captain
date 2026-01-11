@@ -1,8 +1,8 @@
-import Job from '#captain/Jobs/Job.js';
-import { prisma } from '#captain/Services/Prisma.js';
+import Job from '../Jobs/Job.js';
+import { prisma } from '../Services/Prisma.js';
 import { env } from 'process';
 export default class BirthdayJob extends Job {
-    schedule = '0 9 * * *';
+    schedule = '0 12 * * *';
     birthdayChannelId = env.NODE_ENV === 'production' ? '1204230847556354098' : '1204231308427919400';
     async execute() {
         const today = new Date();

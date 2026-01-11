@@ -1,4 +1,4 @@
-import { Handler } from '#captain/Handlers/Handler.js';
+import { Handler } from '../Handlers/Handler.js';
 import { PermissionsBitField } from 'discord.js';
 export default class IntroductionHandler extends Handler {
     introductionChannels = [

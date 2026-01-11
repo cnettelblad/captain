@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
-import SlashCommand from '#captain/Commands/SlashCommand.js';
+import SlashCommand from './Commands/SlashCommand.js';
 dotenv.config();
 const commands = [];
 const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
 async function deployCommands() {
-    const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.js') && file !== 'SlashCommand.js');
+    const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.ts') && file !== 'SlashCommand.ts');
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
         const commandModule = await import(filePath);
