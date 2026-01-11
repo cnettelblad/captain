@@ -7,7 +7,7 @@ export default class BirthdayJob extends Job {
     schedule = '0 12 * * *';
 
     private birthdayChannelId: string =
-        env.NODE_ENV === 'production' ? '1204230847556354098' : '1204231308427919400';
+        env.NODE_ENV === 'production' ? '583718278468206614' : '1204231308427919400';
 
     async execute(): Promise<void> {
         const today = new Date();
