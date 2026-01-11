@@ -1,47 +1,34 @@
 import Job from '#captain/Jobs/Job.js';
-import { TextChannel } from 'discord.js';
 import { prisma } from '#captain/Services/Prisma.js';
 import { env } from 'process';
-
 export default class BirthdayJob extends Job {
     schedule = '0 9 * * *';
-
-    private birthdayChannelId: string =
-        env.NODE_ENV === 'production' ? '1204230847556354098' : '1204231308427919400';
-
-    async execute(): Promise<void> {
+    birthdayChannelId = env.NODE_ENV === 'production' ? '1204230847556354098' : '1204231308427919400';
+    async execute() {
         const today = new Date();
         const currentMonth = today.getUTCMonth() + 1;
         const currentDay = today.getUTCDate();
-
         const birthdays = await prisma.birthday.findMany({
             where: {
                 month: currentMonth,
                 day: currentDay,
             },
         });
-
         if (birthdays.length === 0) {
             console.log('No birthdays today');
             return;
         }
-
         const channel = await this.client.channels.fetch(this.birthdayChannelId);
-
         if (!channel || !channel.isTextBased()) {
             console.error('Birthday channel not found or is not a text channel');
             return;
         }
-
         const message = this.getBirthdayMessage(birthdays.map((b) => b.userId));
-        await (channel as TextChannel).send(message);
-
+        await channel.send(message);
         console.log(`Announced ${birthdays.length} birthday(s)`);
     }
-
-    private getBirthdayMessage(userIds: string[]): string {
+    getBirthdayMessage(userIds) {
         const userMentions = userIds.map((id) => `<@${id}>`);
-
         if (userIds.length === 1) {
             const messages = [
                 `🎉 Happy Birthday, ${userMentions[0]}! Hope you have an amazing day! 🎂`,
@@ -52,16 +39,15 @@ export default class BirthdayJob extends Job {
             ];
             return messages[Math.floor(Math.random() * messages.length)];
         }
-
-        let mentionsList: string;
+        let mentionsList;
         if (userIds.length === 2) {
             mentionsList = `${userMentions[0]} and ${userMentions[1]}`;
-        } else {
+        }
+        else {
             const lastMention = userMentions[userMentions.length - 1];
             const otherMentions = userMentions.slice(0, -1).join(', ');
             mentionsList = `${otherMentions} and ${lastMention}`;
         }
-
         const multipleMessages = [
             `🎉 Happy Birthday to ${mentionsList}! Hope you all have an amazing day! 🎂`,
             `🎈 It's a special day for ${mentionsList}! Wishing you all the best! 🎁`,
@@ -69,7 +55,6 @@ export default class BirthdayJob extends Job {
             `🎂 Multiple birthdays today! Happy Birthday to ${mentionsList}! 🎈`,
             `🥳 Let's celebrate ${mentionsList} today! Happy Birthday! 🎊`,
         ];
-
         return multipleMessages[Math.floor(Math.random() * multipleMessages.length)];
     }
 }

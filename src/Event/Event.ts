@@ -1,9 +1,9 @@
-import {Client, ClientEvents} from 'discord.js';
-import {Handler} from "Captain/Handlers/Handler";
+import { Client, ClientEvents } from 'discord.js';
+import { Handler } from '#captain/Handlers/Handler.js';
 
 type HandlerConstructor<K extends keyof ClientEvents> = new (
     client: Client,
-    args: ClientEvents[K]
+    args: ClientEvents[K],
 ) => Handler<K>;
 
 export default abstract class Event<K extends keyof ClientEvents> {
