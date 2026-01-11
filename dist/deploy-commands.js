@@ -8,7 +8,7 @@ dotenv.config();
 const commands = [];
 const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
 async function deployCommands() {
-    const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.ts') && file !== 'SlashCommand.ts');
+    const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.js') && file !== 'SlashCommand.js');
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
         const commandModule = await import(filePath);
