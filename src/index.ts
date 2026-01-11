@@ -3,6 +3,7 @@ import { config } from 'dotenv'
 import MessageCreate from "Captain/Event/MessageCreate";
 import CommandDispatcher from "Captain/Dispatcher/CommandDispatcher";
 import Event from "Captain/Event/Event";
+import Job from "Captain/Jobs/Job";
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import SlashCommand from 'Captain/Commands/SlashCommand';
@@ -38,8 +39,31 @@ async function loadCommands() {
     }
 }
 
+// Load and schedule jobs
+const jobs: Job[] = [];
+const jobsPath = join(__dirname, 'Jobs');
+
+async function loadJobs() {
+    const jobFiles = readdirSync(jobsPath).filter((file: string) =>
+        (file.endsWith('.ts') || file.endsWith('.js')) && file !== 'Job.ts' && file !== 'Job.js'
+    );
+
+    for (const file of jobFiles) {
+        const filePath = join(jobsPath, file);
+        const jobModule = await import(filePath);
+        const JobClass = jobModule.default;
+
+        if (JobClass && JobClass.prototype instanceof Job) {
+            const jobInstance = new JobClass(client);
+            jobs.push(jobInstance);
+            console.log(`Loaded job: ${jobInstance.constructor.name}`);
+        }
+    }
+}
+
 async function initialize() {
     await loadCommands();
+    await loadJobs();
 
     const events: Event<any>[] = [
         new MessageCreate(client),
@@ -61,6 +85,9 @@ async function initialize() {
         guilds.forEach((guild: any) => {
             console.log(`Guild: ${guild.name} (ID: ${guild.id})`)
         })
+
+        // Start all scheduled jobs
+        jobs.forEach(job => job.start())
     })
 
     await client.login(process.env.DISCORD_TOKEN).catch(console.error);
