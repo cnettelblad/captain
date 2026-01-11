@@ -100,18 +100,28 @@ export default class BirthdayCommand extends SlashCommand {
     }
 
     private parseDate(dateInput: string): Date {
-        // YYYY-MM-DD format
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
-            const date = new Date(dateInput);
-            if (isNaN(date.getTime())) {
+        // Remove any dashes to normalize input
+        const normalized = dateInput.replace(/-/g, '');
+
+        // YYYYMMDD format
+        if (/^\d{8}$/.test(normalized)) {
+            const year = parseInt(normalized.slice(0, 4));
+            const month = parseInt(normalized.slice(4, 6));
+            const day = parseInt(normalized.slice(6, 8));
+
+            const date = new Date(year, month - 1, day);
+
+            if (isNaN(date.getTime()) || date.getMonth() !== month - 1) {
                 throw new Error('Invalid date');
             }
             return date;
         }
 
-        // YY-MM-DD format
-        if (/^\d{2}-\d{2}-\d{2}$/.test(dateInput)) {
-            const [yearShort, month, day] = dateInput.split('-').map(Number);
+        // YYMMDD format
+        if (/^\d{6}$/.test(normalized)) {
+            const yearShort = parseInt(normalized.slice(0, 2));
+            const month = parseInt(normalized.slice(2, 4));
+            const day = parseInt(normalized.slice(4, 6));
 
             // Assume users are at least 16 years old
             // If YY > (current year - 16), assume 1900s, otherwise assume 2000s
