@@ -1,9 +1,8 @@
 import {Client, GatewayIntentBits} from 'discord.js'
 import { config } from 'dotenv'
 import MessageCreate from "Captain/Event/MessageCreate";
-import InteractionCreate from "Captain/Event/InteractionCreate";
+import CommandDispatcher from "Captain/Dispatcher/CommandDispatcher";
 import Event from "Captain/Event/Event";
-import PingCommand from "Captain/Commands/PingCommand";
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import SlashCommand from 'Captain/Commands/SlashCommand';
@@ -44,16 +43,17 @@ async function initialize() {
 
     const events: Event<any>[] = [
         new MessageCreate(client),
-        new InteractionCreate(commands),
     ];
 
-    // Register events
     events.forEach(event => {
         client.on(
             event.constructor.name.charAt(0).toLowerCase() + event.constructor.name.slice(1),
             (...args: any[]) =>  event.execute(...args)
         )
     })
+
+    const commandDispatcher = new CommandDispatcher(commands);
+    client.on('interactionCreate', (interaction) => commandDispatcher.handle(interaction))
 
     client.once('clientReady', async () => {
         console.log('Bot is ready!')

@@ -1,18 +1,16 @@
-import Event from "Captain/Event/Event";
-import { ChatInputCommandInteraction, Client, Events } from "discord.js";
+import { ChatInputCommandInteraction, Interaction } from "discord.js";
 import SlashCommand from "Captain/Commands/SlashCommand";
 
-export default class InteractionCreate extends Event<Events.InteractionCreate> {
+export default class CommandDispatcher {
     private commands: Map<string, SlashCommand> = new Map();
 
     constructor(commands: SlashCommand[]) {
-        super();
         for (const command of commands) {
             this.commands.set(command.data.name, command);
         }
     }
 
-    async execute(client: Client, interaction: any): Promise<void> {
+    async handle(interaction: Interaction): Promise<void> {
         if (!interaction.isChatInputCommand()) return;
 
         const command = this.commands.get(interaction.commandName);
@@ -22,7 +20,7 @@ export default class InteractionCreate extends Event<Events.InteractionCreate> {
         }
 
         try {
-            await command.execute(client, interaction as ChatInputCommandInteraction);
+            await command.execute(interaction.client, interaction as ChatInputCommandInteraction);
         } catch (error) {
             console.error(`Error executing command ${interaction.commandName}:`, error);
 

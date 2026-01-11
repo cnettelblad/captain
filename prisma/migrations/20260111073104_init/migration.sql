@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "Birthday" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" BIGINT NOT NULL,
+    "userId" TEXT NOT NULL,
     "date" DATETIME NOT NULL
 );
 
