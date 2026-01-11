@@ -12,7 +12,7 @@ const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
 
 async function deployCommands() {
     const commandFiles = readdirSync(commandsPath).filter(
-        (file) => file.endsWith('.ts') && file !== 'SlashCommand.ts',
+        (file) => file.endsWith('.js') && file !== 'SlashCommand.js',
     );
 
     for (const file of commandFiles) {
