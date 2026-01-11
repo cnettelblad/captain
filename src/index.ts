@@ -55,7 +55,7 @@ async function initialize() {
         )
     })
 
-    client.once('ready', async () => {
+    client.once('clientReady', async () => {
         console.log('Bot is ready!')
         const guilds = await client.guilds.fetch()
         guilds.forEach((guild: any) => {
