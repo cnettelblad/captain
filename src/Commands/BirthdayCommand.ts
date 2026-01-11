@@ -9,12 +9,20 @@ export default class BirthdayCommand extends SlashCommand {
         .addSubcommand(subcommand =>
             subcommand
                 .setName('add')
-                .setDescription('Set your birthday')
+                .setDescription('Set your birthday (month and day only)')
                 .addStringOption(option =>
                     option
-                        .setName('date')
-                        .setDescription('Your birthday (format: YYYY-MM-DD or YY-MM-DD)')
+                        .setName('month')
+                        .setDescription('Month (1-12 or name e.g March)')
                         .setRequired(true)
+                )
+                .addIntegerOption(option =>
+                    option
+                        .setName('day')
+                        .setDescription('Day of the month (1-31)')
+                        .setRequired(true)
+                        .setMinValue(1)
+                        .setMaxValue(31)
                 )
         )
         .addSubcommand(subcommand =>
@@ -34,15 +42,26 @@ export default class BirthdayCommand extends SlashCommand {
     }
 
     private async handleAdd(interaction: ChatInputCommandInteraction): Promise<void> {
-        const dateInput = interaction.options.getString('date', true);
+        const monthInput = interaction.options.getString('month', true);
+        const day = interaction.options.getInteger('day', true);
         const userId = interaction.user.id;
 
-        let parsedDate: Date;
+        let month: number;
+
         try {
-            parsedDate = this.parseDate(dateInput);
+            month = this.parseMonth(monthInput);
         } catch (error) {
             await interaction.reply({
-                content: 'Invalid date format. Please use YYYY-MM-DD or YY-MM-DD format.',
+                content: 'Invalid month format. Please use a number (1-12) or month name (e.g., Mar, March).',
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
+
+        const daysInMonth = new Date(2000, month, 0).getDate();
+        if (day > daysInMonth) {
+            await interaction.reply({
+                content: `Invalid date.`,
                 flags: MessageFlags.Ephemeral
             });
             return;
@@ -51,17 +70,17 @@ export default class BirthdayCommand extends SlashCommand {
         try {
             await prisma.birthday.upsert({
                 where: { userId },
-                update: { date: parsedDate },
+                update: { month, day },
                 create: {
                     userId,
-                    date: parsedDate
+                    month,
+                    day
                 }
             });
 
-            const formattedDate = parsedDate.toLocaleDateString('en-US', {
+            const formattedDate = new Date(2000, month - 1, day).toLocaleDateString('en-US', {
                 month: 'long',
-                day: 'numeric',
-                year: 'numeric'
+                day: 'numeric'
             });
 
             await interaction.reply({
@@ -99,47 +118,33 @@ export default class BirthdayCommand extends SlashCommand {
         }
     }
 
-    private parseDate(dateInput: string): Date {
-        // Remove any dashes to normalize input
-        const normalized = dateInput.replace(/-/g, '');
+    private parseMonth(input: string): number {
+        const normalized = input.trim().toLowerCase();
 
-        // YYYYMMDD format
-        if (/^\d{8}$/.test(normalized)) {
-            const year = parseInt(normalized.slice(0, 4));
-            const month = parseInt(normalized.slice(4, 6));
-            const day = parseInt(normalized.slice(6, 8));
-
-            const date = new Date(year, month - 1, day);
-
-            if (isNaN(date.getTime()) || date.getMonth() !== month - 1) {
-                throw new Error('Invalid date');
-            }
-            return date;
+        const numericMonth = parseInt(normalized);
+        if (!isNaN(numericMonth) && numericMonth >= 1 && numericMonth <= 12) {
+            return numericMonth;
         }
 
-        // YYMMDD format
-        if (/^\d{6}$/.test(normalized)) {
-            const yearShort = parseInt(normalized.slice(0, 2));
-            const month = parseInt(normalized.slice(2, 4));
-            const day = parseInt(normalized.slice(4, 6));
+        const monthNames: { [key: string]: number } = {
+            'jan': 1, 'january': 1,
+            'feb': 2, 'february': 2,
+            'mar': 3, 'march': 3,
+            'apr': 4, 'april': 4,
+            'may': 5,
+            'jun': 6, 'june': 6,
+            'jul': 7, 'july': 7,
+            'aug': 8, 'august': 8,
+            'sep': 9, 'sept': 9, 'september': 9,
+            'oct': 10, 'october': 10,
+            'nov': 11, 'november': 11,
+            'dec': 12, 'december': 12
+        };
 
-            // Assume users are at least 16 years old
-            // If YY > (current year - 16), assume 1900s, otherwise assume 2000s
-            const currentYear = new Date().getFullYear();
-            const cutoffYear = currentYear - 16;
-            const cutoffYearShort = cutoffYear % 100;
-            const year = yearShort > cutoffYearShort
-                ? 1900 + yearShort
-                : 2000 + yearShort;
-
-            const date = new Date(year, month - 1, day);
-
-            if (isNaN(date.getTime()) || date.getMonth() !== month - 1) {
-                throw new Error('Invalid date');
-            }
-            return date;
+        if (normalized in monthNames) {
+            return monthNames[normalized];
         }
 
-        throw new Error('Invalid date format');
+        throw new Error('Invalid month');
     }
 }

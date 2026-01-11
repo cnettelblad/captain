@@ -2,7 +2,8 @@
 CREATE TABLE "Birthday" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "userId" TEXT NOT NULL,
-    "date" DATETIME NOT NULL
+    "month" INTEGER NOT NULL,
+    "day" INTEGER NOT NULL
 );
 
 -- CreateIndex
