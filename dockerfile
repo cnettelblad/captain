@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:lts-krypton
 WORKDIR /app
 ENV NODE_ENV=production
 
@@ -7,6 +7,7 @@ RUN npm ci --only=production
 
 COPY ./dist ./dist
 COPY ./prisma ./prisma
+COPY ./prisma.config.ts ./prisma.config.ts
 
 RUN mkdir -p /app/database
 

@@ -11,7 +11,7 @@
     "dev:build": "tsc -p tsconfig.json --watch",
     "dev:run": "node --watch dist/index.js",
     "dev": "concurrently -k \"npm:dev:build\" \"npm:dev:run\"",
-    "start": "prisma migrate deploy && node dist/index.js",
+    "start": "prisma generate && prisma migrate deploy && node dist/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
