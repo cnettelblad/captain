@@ -13,7 +13,7 @@ export default class OldSchoolJob extends Job {
     private readonly GUILD_CREATED_TIMESTAMP = 1559239682548;
 
     // Dry run mode - set to false to actually assign/remove roles
-    private readonly DRY_RUN = true;
+    private readonly DRY_RUN = false;
 
     async execute(): Promise<void> {
         const guild = await this.client.guilds.fetch(this.GUILD_ID);
@@ -22,7 +22,9 @@ export default class OldSchoolJob extends Job {
         const twoThirdsAge = (serverAge * 2) / 3;
         const cutoffTimestamp = now - twoThirdsAge;
 
-        console.log(`[OldSchoolJob] Server age: ${Math.floor(serverAge / (1000 * 60 * 60 * 24))} days`);
+        console.log(
+            `[OldSchoolJob] Server age: ${Math.floor(serverAge / (1000 * 60 * 60 * 24))} days`,
+        );
         console.log(`[OldSchoolJob] Cutoff date: ${new Date(cutoffTimestamp).toISOString()}`);
 
         let toAddRole: GuildMember[] = [];
@@ -43,7 +45,9 @@ export default class OldSchoolJob extends Job {
             }
 
             processedCount += members.size;
-            console.log(`[OldSchoolJob] Processing batch of ${members.size} members (total: ${processedCount})`);
+            console.log(
+                `[OldSchoolJob] Processing batch of ${members.size} members (total: ${processedCount})`,
+            );
 
             for (const [, member] of members) {
                 const hasQualifyingRole = this.QUALIFYING_ROLE_IDS.some((roleId) =>
@@ -74,15 +78,23 @@ export default class OldSchoolJob extends Job {
 
         console.log(`[OldSchoolJob] Total members processed: ${processedCount}`);
         console.log(`[OldSchoolJob] Members to receive Old School role: ${toAddRole.length}`);
-        console.log(`[OldSchoolJob] Members to have Old School role removed: ${toRemoveRole.length}`);
+        console.log(
+            `[OldSchoolJob] Members to have Old School role removed: ${toRemoveRole.length}`,
+        );
 
         if (this.DRY_RUN) {
             console.log('[OldSchoolJob] DRY RUN - No roles were modified');
             if (toAddRole.length > 0) {
-                console.log('[OldSchoolJob] Would add role to:', toAddRole.map((m) => m.user.tag).join(', '));
+                console.log(
+                    '[OldSchoolJob] Would add role to:',
+                    toAddRole.map((m) => m.user.tag).join(', '),
+                );
             }
             if (toRemoveRole.length > 0) {
-                console.log('[OldSchoolJob] Would remove role from:', toRemoveRole.map((m) => m.user.tag).join(', '));
+                console.log(
+                    '[OldSchoolJob] Would remove role from:',
+                    toRemoveRole.map((m) => m.user.tag).join(', '),
+                );
             }
             return;
         }
@@ -103,7 +115,10 @@ export default class OldSchoolJob extends Job {
                 await member.roles.remove(this.OLD_SCHOOL_ROLE_ID);
                 console.log(`[OldSchoolJob] Removed Old School role from ${member.user.tag}`);
             } catch (error) {
-                console.error(`[OldSchoolJob] Failed to remove role from ${member.user.tag}:`, error);
+                console.error(
+                    `[OldSchoolJob] Failed to remove role from ${member.user.tag}:`,
+                    error,
+                );
             }
         }
 

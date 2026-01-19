@@ -1,4 +1,4 @@
-import { Handler } from '#captain/Handlers/Handler.js';
+import { Handler } from '../Handlers/Handler.js';
 import { GuildMemberFlags } from 'discord-api-types/v10';
 export default class MemberOnboardedHandler extends Handler {
     async handle() {

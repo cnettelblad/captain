@@ -1,7 +1,7 @@
-import SlashCommand from '#captain/Commands/SlashCommand.js';
+import SlashCommand from '../Commands/SlashCommand.js';
 import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder, } from 'discord.js';
-import BirthdayJob from '#captain/Jobs/BirthdayJob.js';
-import OldSchoolJob from '#captain/Jobs/OldSchoolJob.js';
+import BirthdayJob from '../Jobs/BirthdayJob.js';
+import OldSchoolJob from '../Jobs/OldSchoolJob.js';
 export default class AdminCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('admin')

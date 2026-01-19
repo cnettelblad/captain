@@ -1,4 +1,4 @@
-import Job from '#captain/Jobs/Job.js';
+import Job from '../Jobs/Job.js';
 export default class OldSchoolJob extends Job {
     schedule = '0 0 * * *'; // UTC midnight daily
     GUILD_ID = '583718278468206612';
@@ -9,7 +9,7 @@ export default class OldSchoolJob extends Job {
     ];
     GUILD_CREATED_TIMESTAMP = 1559239682548;
     // Dry run mode - set to false to actually assign/remove roles
-    DRY_RUN = true;
+    DRY_RUN = false;
     async execute() {
         const guild = await this.client.guilds.fetch(this.GUILD_ID);
         const now = Date.now();
