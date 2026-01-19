@@ -1,6 +1,6 @@
-import SlashCommand from '../Commands/SlashCommand.js';
+import SlashCommand from '#captain/Commands/SlashCommand.js';
 import { MessageFlags, SlashCommandBuilder } from 'discord.js';
-import { prisma } from '../Services/Prisma.js';
+import { prisma } from '#captain/Services/Prisma.js';
 export default class BirthdayCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('birthday')

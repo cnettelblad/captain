@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
-import SlashCommand from './Commands/SlashCommand.js';
+import SlashCommand from '#captain/Commands/SlashCommand.js';
 dotenv.config();
 const commands = [];
 const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
