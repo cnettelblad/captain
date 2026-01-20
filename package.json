@@ -14,7 +14,8 @@
     "start": "prisma generate && prisma migrate deploy && node dist/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "deploy-commands": "node dist/deploy-commands.js"
+    "deploy-commands": "node dist/deploy-commands.js",
+    "clear-guild-commands": "node dist/deploy-commands.js --clear-guild"
   },
   "keywords": [],
   "author": "",

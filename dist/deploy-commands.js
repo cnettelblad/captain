@@ -8,6 +8,20 @@ dotenv.config();
 const commands = [];
 const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
 async function deployCommands() {
+    const clearGuild = process.argv.includes('--clear-guild');
+    if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
+        throw new Error('Missing DISCORD_TOKEN or DISCORD_CLIENT_ID in environment variables');
+    }
+    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+    if (clearGuild) {
+        if (!process.env.DISCORD_GUILD_ID) {
+            throw new Error('Missing DISCORD_GUILD_ID environment variable for --clear-guild');
+        }
+        console.log(`Clearing all guild-specific commands for guild ${process.env.DISCORD_GUILD_ID}...`);
+        await rest.put(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, process.env.DISCORD_GUILD_ID), { body: [] });
+        console.log('Successfully cleared all guild-specific commands.');
+        return;
+    }
     const commandFiles = readdirSync(commandsPath).filter((file) => file.endsWith('.js') && file !== 'SlashCommand.js');
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
@@ -19,10 +33,6 @@ async function deployCommands() {
             console.log(`Loaded command: ${commandInstance.data.name}`);
         }
     }
-    if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
-        throw new Error('Missing DISCORD_TOKEN or DISCORD_CLIENT_ID in environment variables');
-    }
-    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     console.log(`Started refreshing ${commands.length} application (/) commands.`);
     let data;
     if (process.env.DISCORD_GUILD_ID) {

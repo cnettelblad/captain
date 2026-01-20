@@ -12,3 +12,15 @@ model Birthday {
   month  Int    // 1-12
   day    Int    // 1-31
 }
+
+model UserEncounter {
+  id        Int      @id @default(autoincrement())
+  userA     String
+  userB     String
+  createdBy String
+  status    String   @default("pending") // pending, confirmed, rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userA, userB])
+}
