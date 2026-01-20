@@ -23,7 +23,7 @@ export default class MeetupCommand extends SlashCommand {
         }
         const userIds = encounters.map((e) => e.userA === interaction.user.id ? e.userB : e.userA);
         const guild = await client.guilds.fetch(GUILD_ID);
-        const fields = [];
+        const displayNames = [];
         for (const userId of userIds) {
             let displayName;
             try {
@@ -39,12 +39,22 @@ export default class MeetupCommand extends SlashCommand {
                     displayName = `~~Unknown User~~`;
                 }
             }
-            fields.push({
-                name: '\u200b',
-                value: displayName,
-                inline: true,
-            });
+            displayNames.push(displayName);
         }
+        const rowCount = Math.ceil(displayNames.length / 3);
+        const columns = [[], [], []];
+        for (let i = 0; i < displayNames.length; i++) {
+            const columnIndex = Math.floor(i / rowCount);
+            const orderNumber = i + 1;
+            columns[columnIndex].push(`${orderNumber}. ${displayNames[i]}`);
+        }
+        const fields = columns
+            .filter((col) => col.length > 0)
+            .map((col) => ({
+            name: '\u200b',
+            value: col.join('\n'),
+            inline: true,
+        }));
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Meetup List`)
             .setDescription(`Below are the people that have met ${interaction.user.displayName} in person.`)

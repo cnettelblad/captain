@@ -49,7 +49,7 @@ export default class MeetupCommand extends SlashCommand {
         );
 
         const guild = await client.guilds.fetch(GUILD_ID);
-        const fields: { name: string; value: string; inline: boolean }[] = [];
+        const displayNames: string[] = [];
 
         for (const userId of userIds) {
             let displayName: string;
@@ -64,13 +64,25 @@ export default class MeetupCommand extends SlashCommand {
                     displayName = `~~Unknown User~~`;
                 }
             }
-
-            fields.push({
-                name: '\u200b',
-                value: displayName,
-                inline: true,
-            });
+            displayNames.push(displayName);
         }
+
+        const rowCount = Math.ceil(displayNames.length / 3);
+        const columns: string[][] = [[], [], []];
+
+        for (let i = 0; i < displayNames.length; i++) {
+            const columnIndex = Math.floor(i / rowCount);
+            const orderNumber = i + 1;
+            columns[columnIndex].push(`${orderNumber}. ${displayNames[i]}`);
+        }
+
+        const fields = columns
+            .filter((col) => col.length > 0)
+            .map((col) => ({
+                name: '\u200b',
+                value: col.join('\n'),
+                inline: true,
+            }));
 
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Meetup List`)
