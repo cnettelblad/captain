@@ -75,7 +75,7 @@ export default class MetCommand extends SlashCommand {
 
             if (existingEncounter.status === 'pending') {
                 if (existingEncounter.createdBy !== initiator.id) {
-                    await this.confirmEncounter(existingEncounter, client);
+                    await MetCommand.confirmEncounter(existingEncounter, client);
                     await interaction.reply({
                         content: `Meetup with ${targetUser} confirmed!`,
                         flags: MessageFlags.Ephemeral,
@@ -94,7 +94,7 @@ export default class MetCommand extends SlashCommand {
                 existingEncounter.status === 'rejected' &&
                 existingEncounter.createdBy !== initiator.id
             ) {
-                await this.confirmEncounter(existingEncounter, client);
+                await MetCommand.confirmEncounter(existingEncounter, client);
                 await interaction.reply({
                     content: `Meetup with ${targetUser} confirmed!`,
                     flags: MessageFlags.Ephemeral,
@@ -188,7 +188,7 @@ export default class MetCommand extends SlashCommand {
         }
 
         if (action === 'confirm') {
-            await this.confirmEncounter(encounter, interaction.client);
+            await MetCommand.confirmEncounter(encounter, interaction.client);
         } else {
             await prisma.userEncounter.update({
                 where: { id: encounter.id },
@@ -205,7 +205,7 @@ export default class MetCommand extends SlashCommand {
         });
     }
 
-    private async confirmEncounter(encounter: UserEncounter, client: Client): Promise<void> {
+    public static async confirmEncounter(encounter: UserEncounter, client: Client): Promise<void> {
         await prisma.userEncounter.update({
             where: { id: encounter.id },
             data: { status: 'confirmed' },
@@ -223,10 +223,10 @@ export default class MetCommand extends SlashCommand {
             // Ignore DM failures
         }
 
-        this.handleMilestone(encounter, client);
+        MetCommand.handleMilestone(encounter, client);
     }
 
-    private async handleMilestone(encounter: UserEncounter, client: Client): Promise<void> {
+    public static async handleMilestone(encounter: UserEncounter, client: Client): Promise<void> {
         const { userA, userB } = encounter;
 
         const MILESTONE_ROLES = {
@@ -269,6 +269,10 @@ export default class MetCommand extends SlashCommand {
             if (!role) continue;
 
             await member.roles.add(role);
+
+            console.log(
+                `[MetCommand] Assigned ${role.name} to user ${member.user.tag} for reaching ${count} confirmed meetups.`,
+            );
 
             for (const [milestoneCount, roleId] of Object.entries(MILESTONE_ROLES)) {
                 if (parseInt(milestoneCount) < count && member.roles.cache.has(roleId)) {

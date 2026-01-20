@@ -7,12 +7,44 @@ import SlashCommand from './Commands/SlashCommand.js';
 dotenv.config();
 const commands = [];
 const commandsPath = fileURLToPath(new URL('./Commands', import.meta.url));
+function parseArgs() {
+    const args = {};
+    for (const arg of process.argv.slice(2)) {
+        if (arg.includes('=')) {
+            const [key, value] = arg.split('=');
+            args[key] = value;
+        }
+    }
+    return args;
+}
 async function deployCommands() {
     const clearGuild = process.argv.includes('--clear-guild');
+    const args = parseArgs();
     if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
         throw new Error('Missing DISCORD_TOKEN or DISCORD_CLIENT_ID in environment variables');
     }
     const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+    // Handle single command deployment to a specific guild
+    if (args.guild && args.command) {
+        const commandFile = `${args.command}.js`;
+        const filePath = join(commandsPath, commandFile);
+        try {
+            const commandModule = await import(filePath);
+            const CommandClass = commandModule.default;
+            if (!CommandClass || !(CommandClass.prototype instanceof SlashCommand)) {
+                throw new Error(`${args.command} is not a valid SlashCommand`);
+            }
+            const commandInstance = new CommandClass();
+            const commandData = commandInstance.data.toJSON();
+            console.log(`Deploying ${commandInstance.data.name} to guild ${args.guild}...`);
+            await rest.post(Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, args.guild), { body: commandData });
+            console.log(`Successfully deployed ${commandInstance.data.name} to guild ${args.guild}`);
+        }
+        catch (error) {
+            console.error(`Failed to deploy command:`, error);
+        }
+        return;
+    }
     if (clearGuild) {
         if (!process.env.DISCORD_GUILD_ID) {
             throw new Error('Missing DISCORD_GUILD_ID environment variable for --clear-guild');

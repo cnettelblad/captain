@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "deploy-commands": "node dist/deploy-commands.js",
-    "clear-guild-commands": "node dist/deploy-commands.js --clear-guild"
+    "clear-guild-commands": "node dist/deploy-commands.js --clear-guild",
+    "update-guild-command": "node dist/deploy-commands.js"
   },
   "keywords": [],
   "author": "",
