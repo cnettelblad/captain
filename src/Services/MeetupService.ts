@@ -58,6 +58,10 @@ export default class MeetupService {
     ): Promise<UserEncounter> {
         const [userA, userB] = this.normalizeUserIds(userId1, userId2);
 
+        console.log(
+            `[MeetupService] Creating confirmed encounter between ${userA} and ${userB} by admin ${createdBy}.`,
+        );
+
         return prisma.$transaction(async (tx) => {
             const encounter = await tx.userEncounter.create({
                 data: { userA, userB, createdBy, status: 'confirmed' },
@@ -143,8 +147,8 @@ export default class MeetupService {
         const { userA, userB } = encounter;
 
         const [confirmedCountA, confirmedCountB] = await Promise.all([
-            prisma.userEncounter.count({ where: { userA, status: 'confirmed' } }),
-            prisma.userEncounter.count({ where: { userB, status: 'confirmed' } }),
+            this.countConfirmedMeetups(userA),
+            this.countConfirmedMeetups(userB),
         ]);
 
         const targets = [
@@ -158,6 +162,9 @@ export default class MeetupService {
             if (!milestone) continue;
 
             try {
+                console.log(
+                    `[MeetupService] Processing milestone for user ${userId} with ${count} confirmed meetups.`,
+                );
                 const guild = await this.client.guilds.fetch(GUILD_ID);
 
                 if (!guild) continue;
@@ -192,11 +199,20 @@ export default class MeetupService {
                 } catch {
                     console.log(`[MeetupService] Failed to send DM to user ${member.user.tag}.`);
                 }
-            } catch {
+            } catch (_e) {
                 console.log(
                     `[MeetupService] Could not process milestone for user ${userId} (may not be in server).`,
                 );
             }
         }
+    }
+
+    private countConfirmedMeetups(userId: string): Promise<number> {
+        return prisma.userEncounter.count({
+            where: {
+                status: 'confirmed',
+                OR: [{ userA: userId }, { userB: userId }],
+            },
+        });
     }
 }
