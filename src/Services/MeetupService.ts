@@ -207,11 +207,39 @@ export default class MeetupService {
         }
     }
 
-    private countConfirmedMeetups(userId: string): Promise<number> {
+    public countConfirmedMeetups(userId: string): Promise<number> {
         return prisma.userEncounter.count({
             where: {
                 status: 'confirmed',
                 OR: [{ userA: userId }, { userB: userId }],
+            },
+        });
+    }
+
+    public async getConfirmedMeetups(userId: string): Promise<UserEncounter[]> {
+        return prisma.userEncounter.findMany({
+            where: {
+                status: 'confirmed',
+                OR: [{ userA: userId }, { userB: userId }],
+            },
+        });
+    }
+
+    public async getPendingMeetups(
+        userId: string,
+        outgoing: boolean = true,
+    ): Promise<UserEncounter[]> {
+        return prisma.userEncounter.findMany({
+            where: {
+                status: 'pending',
+                ...(outgoing
+                    ? { createdBy: userId }
+                    : {
+                          AND: [
+                              { createdBy: { not: userId } },
+                              { OR: [{ userA: userId }, { userB: userId }] },
+                          ],
+                      }),
             },
         });
     }

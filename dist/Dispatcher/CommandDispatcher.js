@@ -46,6 +46,14 @@ export default class CommandDispatcher {
                 }
                 return;
             }
+            // Handle meetup command buttons
+            if (interaction.customId.startsWith('meetup_')) {
+                const meetupCommand = this.commands.get('meetup');
+                if (meetupCommand) {
+                    await meetupCommand.handleButton(interaction);
+                }
+                return;
+            }
         }
         catch (error) {
             console.error(`Error handling button interaction:`, error);

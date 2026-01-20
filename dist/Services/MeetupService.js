@@ -165,4 +165,27 @@ export default class MeetupService {
             },
         });
     }
+    async getConfirmedMeetups(userId) {
+        return prisma.userEncounter.findMany({
+            where: {
+                status: 'confirmed',
+                OR: [{ userA: userId }, { userB: userId }],
+            },
+        });
+    }
+    async getPendingMeetups(userId, outgoing = true) {
+        return prisma.userEncounter.findMany({
+            where: {
+                status: 'pending',
+                ...(outgoing
+                    ? { createdBy: userId }
+                    : {
+                        AND: [
+                            { createdBy: { not: userId } },
+                            { OR: [{ userA: userId }, { userB: userId }] },
+                        ],
+                    }),
+            },
+        });
+    }
 }

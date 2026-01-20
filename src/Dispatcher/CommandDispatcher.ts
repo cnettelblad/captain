@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, Interaction } from 'discord.js';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 import MetCommand from '#captain/Commands/MetCommand.js';
+import MeetupCommand from '#captain/Commands/MeetupCommand.js';
 
 export default class CommandDispatcher {
     private commands: Map<string, SlashCommand> = new Map();
@@ -51,6 +52,15 @@ export default class CommandDispatcher {
                 const metCommand = this.commands.get('met') as MetCommand | undefined;
                 if (metCommand) {
                     await metCommand.handleButton(interaction);
+                }
+                return;
+            }
+
+            // Handle meetup command buttons
+            if (interaction.customId.startsWith('meetup_')) {
+                const meetupCommand = this.commands.get('meetup') as MeetupCommand | undefined;
+                if (meetupCommand) {
+                    await meetupCommand.handleButton(interaction);
                 }
                 return;
             }
