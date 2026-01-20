@@ -59,7 +59,8 @@ export default class MeetupCommand extends SlashCommand {
             .setTitle(`${interaction.user.displayName}'s Meetup List`)
             .setDescription(`Below are the people that have met ${interaction.user.displayName} in person.`)
             .setColor(0x2383db)
-            .setFields(fields);
+            .setFields(fields)
+            .setFooter({ text: 'Use /meetup list to see your list.' });
         const shareButton = new ButtonBuilder()
             .setCustomId(`meetup_share_${interaction.user.id}`)
             .setLabel('Share')
