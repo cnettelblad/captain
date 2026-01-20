@@ -6,10 +6,9 @@ import {
     PermissionFlagsBits,
     SlashCommandBuilder,
 } from 'discord.js';
-import { prisma } from '#captain/Services/Prisma.js';
 import BirthdayJob from '#captain/Jobs/BirthdayJob.js';
 import OldSchoolJob from '#captain/Jobs/OldSchoolJob.js';
-import MetCommand from '#captain/Commands/MetCommand.js';
+import MeetupService from '#captain/Services/MeetupService.js';
 
 export default class AdminCommand extends SlashCommand {
     public data = new SlashCommandBuilder()
@@ -115,11 +114,8 @@ export default class AdminCommand extends SlashCommand {
 
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-        const [userA, userB] = [user1.id, user2.id].sort();
-
-        const existingEncounter = await prisma.userEncounter.findUnique({
-            where: { userA_userB: { userA, userB } },
-        });
+        const meetupService = new MeetupService(client);
+        const existingEncounter = await meetupService.findEncounter(user1.id, user2.id);
 
         if (existingEncounter?.status === 'confirmed') {
             await interaction.editReply(`Meetup between ${user1} and ${user2} already exists.`);
@@ -127,20 +123,9 @@ export default class AdminCommand extends SlashCommand {
         }
 
         if (existingEncounter) {
-            await prisma.userEncounter.update({
-                where: { id: existingEncounter.id },
-                data: { status: 'confirmed' },
-            });
+            await meetupService.updateToConfirmed(existingEncounter);
         } else {
-            const encounter = await prisma.userEncounter.create({
-                data: {
-                    userA,
-                    userB,
-                    createdBy: interaction.user.id,
-                    status: 'confirmed',
-                },
-            });
-            await MetCommand.handleMilestone(encounter, client);
+            await meetupService.createConfirmedEncounter(user1.id, user2.id, interaction.user.id);
         }
 
         await interaction.editReply(`Meetup between ${user1} and ${user2} has been created.`);

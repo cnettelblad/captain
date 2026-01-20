@@ -9,8 +9,7 @@ import {
     MessageFlags,
     SlashCommandBuilder,
 } from 'discord.js';
-import { prisma } from '#captain/Services/Prisma.js';
-import { UserEncounter } from '@prisma/client';
+import MeetupService from '#captain/Services/MeetupService.js';
 
 export default class MetCommand extends SlashCommand {
     public data = new SlashCommandBuilder()
@@ -20,9 +19,23 @@ export default class MetCommand extends SlashCommand {
             option.setName('user').setDescription('The user you met').setRequired(true),
         );
 
+    private async notifyInitiator(
+        client: Client,
+        initiatorId: string,
+        otherUserId: string,
+    ): Promise<void> {
+        try {
+            const initiator = await client.users.fetch(initiatorId);
+            await initiator.send(`<@${otherUserId}> has confirmed that you met!`);
+        } catch {
+            // Ignore DM failures
+        }
+    }
+
     public async execute(client: Client, interaction: ChatInputCommandInteraction): Promise<void> {
         const targetUser = interaction.options.getUser('user', true);
         const initiator = interaction.user;
+        const meetupService = new MeetupService(client);
 
         if (targetUser.id === initiator.id) {
             await interaction.reply({
@@ -40,12 +53,7 @@ export default class MetCommand extends SlashCommand {
             return;
         }
 
-        const pendingCount = await prisma.userEncounter.count({
-            where: {
-                createdBy: initiator.id,
-                status: 'pending',
-            },
-        });
+        const pendingCount = await meetupService.countPendingByUser(initiator.id);
 
         if (pendingCount >= 10) {
             await interaction.reply({
@@ -56,13 +64,7 @@ export default class MetCommand extends SlashCommand {
             return;
         }
 
-        // Normalize user IDs so userA is always the smaller ID
-        const [userA, userB] = [initiator.id, targetUser.id].sort();
-        const existingEncounter = await prisma.userEncounter.findUnique({
-            where: {
-                userA_userB: { userA, userB },
-            },
-        });
+        const existingEncounter = await meetupService.findEncounter(initiator.id, targetUser.id);
 
         if (existingEncounter) {
             if (existingEncounter.status === 'confirmed') {
@@ -75,7 +77,8 @@ export default class MetCommand extends SlashCommand {
 
             if (existingEncounter.status === 'pending') {
                 if (existingEncounter.createdBy !== initiator.id) {
-                    await MetCommand.confirmEncounter(existingEncounter, client);
+                    await meetupService.confirmEncounter(existingEncounter);
+                    await this.notifyInitiator(client, existingEncounter.createdBy, initiator.id);
                     await interaction.reply({
                         content: `Meetup with ${targetUser} confirmed!`,
                         flags: MessageFlags.Ephemeral,
@@ -94,7 +97,8 @@ export default class MetCommand extends SlashCommand {
                 existingEncounter.status === 'rejected' &&
                 existingEncounter.createdBy !== initiator.id
             ) {
-                await MetCommand.confirmEncounter(existingEncounter, client);
+                await meetupService.confirmEncounter(existingEncounter);
+                await this.notifyInitiator(client, existingEncounter.createdBy, initiator.id);
                 await interaction.reply({
                     content: `Meetup with ${targetUser} confirmed!`,
                     flags: MessageFlags.Ephemeral,
@@ -110,10 +114,7 @@ export default class MetCommand extends SlashCommand {
                 existingEncounter.createdBy === initiator.id &&
                 existingEncounter.updatedAt < fourteenDaysAgo
             ) {
-                await prisma.userEncounter.update({
-                    where: { id: existingEncounter.id },
-                    data: { status: 'pending', createdBy: initiator.id },
-                });
+                await meetupService.updateToPending(existingEncounter, initiator.id);
             } else {
                 await interaction.reply({
                     content: `Your previous meetup request with ${targetUser} was rejected. You can only send a new request after 14 days.`,
@@ -122,9 +123,7 @@ export default class MetCommand extends SlashCommand {
                 return;
             }
         } else {
-            await prisma.userEncounter.create({
-                data: { userA, userB, createdBy: initiator.id, status: 'pending' },
-            });
+            await meetupService.createEncounter(initiator.id, targetUser.id, initiator.id);
         }
 
         const confirmButton = new ButtonBuilder()
@@ -162,6 +161,7 @@ export default class MetCommand extends SlashCommand {
 
     public async handleButton(interaction: ButtonInteraction): Promise<void> {
         const [, action, initiatorId, targetId] = interaction.customId.split('_');
+        const meetupService = new MeetupService(interaction.client);
 
         if (interaction.user.id !== targetId) {
             await interaction.reply({
@@ -171,13 +171,7 @@ export default class MetCommand extends SlashCommand {
             return;
         }
 
-        const [userA, userB] = [initiatorId, targetId].sort();
-
-        const encounter = await prisma.userEncounter.findUnique({
-            where: {
-                userA_userB: { userA, userB },
-            },
-        });
+        const encounter = await meetupService.findEncounter(initiatorId, targetId);
 
         if (!encounter || encounter.status !== 'pending') {
             await interaction.reply({
@@ -188,12 +182,10 @@ export default class MetCommand extends SlashCommand {
         }
 
         if (action === 'confirm') {
-            await MetCommand.confirmEncounter(encounter, interaction.client);
+            await meetupService.confirmEncounter(encounter);
+            await this.notifyInitiator(interaction.client, encounter.createdBy, targetId);
         } else {
-            await prisma.userEncounter.update({
-                where: { id: encounter.id },
-                data: { status: 'rejected' },
-            });
+            await meetupService.rejectEncounter(encounter);
         }
 
         await interaction.update({
@@ -203,90 +195,5 @@ export default class MetCommand extends SlashCommand {
                     : `Declined the meetup request from <@${initiatorId}>.`,
             components: [],
         });
-    }
-
-    public static async confirmEncounter(encounter: UserEncounter, client: Client): Promise<void> {
-        await prisma.userEncounter.update({
-            where: { id: encounter.id },
-            data: { status: 'confirmed' },
-        });
-
-        const { userA, userB } = encounter;
-
-        console.log(`[MetCommand] Encounter between ${userA} and ${userB} confirmed.`);
-
-        try {
-            const otherUserId = encounter.createdBy === userA ? userB : userA;
-            const initiator = await client.users.fetch(encounter.createdBy);
-            await initiator.send(`<@${otherUserId}> has confirmed that you met!`);
-        } catch {
-            // Ignore DM failures
-        }
-
-        MetCommand.handleMilestone(encounter, client);
-    }
-
-    public static async handleMilestone(encounter: UserEncounter, client: Client): Promise<void> {
-        const { userA, userB } = encounter;
-
-        const MILESTONE_ROLES = {
-            1: '1230237976605360168',
-            5: '1230238066510139434',
-            10: '1230238118729351189',
-            25: '1352005935798947872',
-            50: '1380168192999030814',
-            100: '1380169001652719756',
-        } as const;
-
-        const [confirmedCountA, confirmedCountB] = await Promise.all([
-            prisma.userEncounter.count({ where: { userA, status: 'confirmed' } }),
-            prisma.userEncounter.count({ where: { userB, status: 'confirmed' } }),
-        ]);
-
-        const targets = [
-            { userId: userA, count: confirmedCountA },
-            { userId: userB, count: confirmedCountB },
-        ];
-
-        for (const { userId, count } of targets) {
-            /**
-             * This is a bit ugly, might refactor later idk.
-             */
-            const milestone = MILESTONE_ROLES[count as keyof typeof MILESTONE_ROLES];
-
-            if (!milestone) continue;
-
-            const guild = await client.guilds.fetch('583718278468206612');
-
-            if (!guild) continue;
-
-            const member = await guild.members.fetch(userId);
-
-            if (!member) continue;
-
-            const role = await guild.roles.fetch(milestone);
-
-            if (!role) continue;
-
-            await member.roles.add(role);
-
-            console.log(
-                `[MetCommand] Assigned ${role.name} to user ${member.user.tag} for reaching ${count} confirmed meetups.`,
-            );
-
-            for (const [milestoneCount, roleId] of Object.entries(MILESTONE_ROLES)) {
-                if (parseInt(milestoneCount) < count && member.roles.cache.has(roleId)) {
-                    await member.roles.remove(roleId);
-                }
-            }
-
-            try {
-                await member.send(
-                    `🎉 Congratulations! You've reached ${count} confirmed meetups and earned the ${role.name} role! 🎉`,
-                );
-            } catch {
-                // Ignore DM failures
-            }
-        }
     }
 }

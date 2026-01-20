@@ -1,9 +1,8 @@
 import SlashCommand from '../Commands/SlashCommand.js';
 import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder, } from 'discord.js';
-import { prisma } from '../Services/Prisma.js';
 import BirthdayJob from '../Jobs/BirthdayJob.js';
 import OldSchoolJob from '../Jobs/OldSchoolJob.js';
-import MetCommand from '../Commands/MetCommand.js';
+import MeetupService from '../Services/MeetupService.js';
 export default class AdminCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('admin')
@@ -72,30 +71,17 @@ export default class AdminCommand extends SlashCommand {
             return;
         }
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        const [userA, userB] = [user1.id, user2.id].sort();
-        const existingEncounter = await prisma.userEncounter.findUnique({
-            where: { userA_userB: { userA, userB } },
-        });
+        const meetupService = new MeetupService(client);
+        const existingEncounter = await meetupService.findEncounter(user1.id, user2.id);
         if (existingEncounter?.status === 'confirmed') {
             await interaction.editReply(`Meetup between ${user1} and ${user2} already exists.`);
             return;
         }
         if (existingEncounter) {
-            await prisma.userEncounter.update({
-                where: { id: existingEncounter.id },
-                data: { status: 'confirmed' },
-            });
+            await meetupService.updateToConfirmed(existingEncounter);
         }
         else {
-            const encounter = await prisma.userEncounter.create({
-                data: {
-                    userA,
-                    userB,
-                    createdBy: interaction.user.id,
-                    status: 'confirmed',
-                },
-            });
-            await MetCommand.handleMilestone(encounter, client);
+            await meetupService.createConfirmedEncounter(user1.id, user2.id, interaction.user.id);
         }
         await interaction.editReply(`Meetup between ${user1} and ${user2} has been created.`);
     }
