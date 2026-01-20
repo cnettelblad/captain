@@ -57,7 +57,7 @@ export default class MeetupCommand extends SlashCommand {
         }));
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Meetup List`)
-            .setDescription(`Below are the people that have met ${interaction.user.displayName} in person.`)
+            .setDescription(`Below are the people that have met ${interaction.user.tag} in person.`)
             .setColor(0x2383db)
             .setFields(fields)
             .setFooter({ text: 'Use /meetup list to see your list.' });
