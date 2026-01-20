@@ -167,8 +167,10 @@ export default class MetCommand extends SlashCommand {
             where: { id: encounter.id },
             data: { status: 'confirmed' },
         });
+        const { userA, userB } = encounter;
+        console.log(`[MetCommand] Encounter between ${userA} and ${userB} confirmed.`);
         try {
-            const otherUserId = encounter.createdBy === encounter.userA ? encounter.userB : encounter.userA;
+            const otherUserId = encounter.createdBy === userA ? userB : userA;
             const initiator = await client.users.fetch(encounter.createdBy);
             await initiator.send(`<@${otherUserId}> has confirmed that you met!`);
         }
@@ -202,7 +204,7 @@ export default class MetCommand extends SlashCommand {
             const milestone = MILESTONE_ROLES[count];
             if (!milestone)
                 continue;
-            const guild = await client.guilds.fetch(process.env.DISCORD_GUILD_ID);
+            const guild = await client.guilds.fetch('583718278468206612');
             if (!guild)
                 continue;
             const member = await guild.members.fetch(userId);
