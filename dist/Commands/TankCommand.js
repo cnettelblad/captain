@@ -1,6 +1,7 @@
 import SlashCommand from '../Commands/SlashCommand.js';
 import { MessageFlags, PermissionFlagsBits, SlashCommandBuilder, } from 'discord.js';
 import TankService from '../Services/TankService.js';
+import TankJob from '../Jobs/TankJob.js';
 import { parseDuration, formatDuration } from '../Utils/Duration.js';
 export default class TankCommand extends SlashCommand {
     data = new SlashCommandBuilder()
@@ -54,5 +55,7 @@ export default class TankCommand extends SlashCommand {
         }
         await interaction.reply(message);
         await tankService.sendTankWelcome(user.id);
+        const tankJob = new TankJob(client);
+        await tankJob.execute();
     }
 }

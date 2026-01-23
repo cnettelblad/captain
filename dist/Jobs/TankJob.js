@@ -4,14 +4,28 @@ export default class TankJob extends Job {
     schedule = '* * * * *'; // Every minute
     async execute() {
         const tankService = new TankService(this.client);
-        const expiredSentences = await tankService.getExpiredSentences();
-        if (expiredSentences.length === 0) {
+        const sentences = await tankService.getExpiringSentences(60000);
+        if (sentences.length === 0) {
             return;
         }
-        for (const sentence of expiredSentences) {
-            await tankService.freeUser(sentence.userId, null);
-            console.log(`[TankJob] Freed user ${sentence.userId} (sentence expired)`);
+        const now = Date.now();
+        for (const sentence of sentences) {
+            if (!sentence.expiresAt)
+                continue;
+            const timeRemaining = sentence.expiresAt.getTime() - now;
+            if (timeRemaining <= 0) {
+                // Already expired, free immediately
+                await tankService.freeUser(sentence.userId, null);
+                console.log(`[TankJob] Freed user ${sentence.userId} (sentence expired)`);
+            }
+            else {
+                // Expires within the next minute, schedule precise timeout
+                setTimeout(async () => {
+                    await tankService.freeUser(sentence.userId, null);
+                    console.log(`[TankJob] Freed user ${sentence.userId} (scheduled release)`);
+                }, timeRemaining);
+                console.log(`[TankJob] Scheduled release for user ${sentence.userId} in ${timeRemaining}ms`);
+            }
         }
-        console.log(`[TankJob] Processed ${expiredSentences.length} expired tank sentence(s)`);
     }
 }

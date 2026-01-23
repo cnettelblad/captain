@@ -102,4 +102,21 @@ export default class TankService {
             },
         });
     }
+
+    /**
+     * Gets sentences expiring within the specified remaining time (in milliseconds).
+     * This includes already expired sentences and those expiring soon.
+     */
+    public async getExpiringSentences(remainingTime: number = 60000) {
+        const windowEnd = new Date(Date.now() + remainingTime);
+
+        return prisma.tankSentence.findMany({
+            where: {
+                expiresAt: {
+                    lte: windowEnd,
+                },
+                freedAt: null,
+            },
+        });
+    }
 }
