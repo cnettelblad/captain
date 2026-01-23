@@ -7,7 +7,7 @@ export default class AdminCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('admin')
         .setDescription('Administrator commands')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageGuild)
         .addSubcommandGroup((group) => group
         .setName('birthday')
         .setDescription('Birthday management')

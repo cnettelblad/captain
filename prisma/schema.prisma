@@ -20,7 +20,18 @@ model UserEncounter {
   createdBy String
   status    String   @default("pending") // pending, confirmed, rejected
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([userA, userB])
+}
+
+model TankSentence {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  tankedBy  String
+  reason    String?
+  expiresAt DateTime?
+  freedAt   DateTime?
+  freedBy   String?
+  createdAt DateTime  @default(now())
 }
