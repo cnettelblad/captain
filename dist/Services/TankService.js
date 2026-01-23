@@ -1,6 +1,6 @@
 import { prisma } from '../Services/Prisma.js';
-const TANK_ROLE = '584384063012282369';
-const TANK_CHANNEL = '584384231354941450';
+const TANK_ROLE = '1070394685039853618';
+const TANK_CHANNEL = '1070394518223999067';
 const GUILD_ID = '583718278468206612';
 export default class TankService {
     client;
@@ -11,7 +11,11 @@ export default class TankService {
      * Tanks a user by adding the tank role and creating a database record.
      */
     async tankUser(member, tankedBy, durationMs, reason) {
-        await member.roles.add(TANK_ROLE);
+        const fish = await member.guild.roles.fetch(TANK_ROLE);
+        if (!fish) {
+            throw new Error('Tank role not found');
+        }
+        await member.roles.add(fish);
         const expiresAt = durationMs ? new Date(Date.now() + durationMs) : null;
         await prisma.tankSentence.create({
             data: {

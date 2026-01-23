@@ -8,7 +8,10 @@ export default class TankCommand extends SlashCommand {
         .setDescription('Send a user to the tank')
         .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers)
         .addUserOption((option) => option.setName('user').setDescription('The user to tank').setRequired(true))
-        .addStringOption((option) => option.setName('duration').setDescription('Duration (e.g., 1h, 30m, 1d)').setRequired(false))
+        .addStringOption((option) => option
+        .setName('duration')
+        .setDescription('Duration (e.g., 1h, 30m, 1d)')
+        .setRequired(false))
         .addStringOption((option) => option.setName('reason').setDescription('Reason for tanking').setRequired(false));
     async execute(client, interaction) {
         const user = interaction.options.getUser('user', true);
@@ -43,7 +46,9 @@ export default class TankCommand extends SlashCommand {
         }
         await tankService.tankUser(member, interaction.user.id, durationMs, reason);
         const durationText = durationMs ? formatDuration(durationMs) : 'indefinitely';
-        let message = `${user} was tanked by ${interaction.user} for ${durationText}.`;
+        let message = durationMs
+            ? `🐟 ${user} was tanked by ${interaction.user} for ${durationText}.`
+            : `🐟 ${user} was tanked by ${interaction.user} indefinitely.`;
         if (reason) {
             message += ` Reason: ${reason}`;
         }

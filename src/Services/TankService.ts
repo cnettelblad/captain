@@ -17,7 +17,13 @@ export default class TankService {
         durationMs: number | null,
         reason: string | null,
     ): Promise<void> {
-        await member.roles.add(TANK_ROLE);
+        const fish = await member.guild.roles.fetch(TANK_ROLE);
+
+        if (!fish) {
+            throw new Error('Tank role not found');
+        }
+
+        await member.roles.add(fish);
 
         const expiresAt = durationMs ? new Date(Date.now() + durationMs) : null;
 
