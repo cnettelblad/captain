@@ -5,7 +5,7 @@ export default class FreeCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('free')
         .setDescription('Free a user from the tank')
-        .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption((option) => option.setName('user').setDescription('The user to free').setRequired(true));
     async execute(client, interaction) {
         const user = interaction.options.getUser('user', true);

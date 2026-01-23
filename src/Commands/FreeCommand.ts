@@ -12,7 +12,7 @@ export default class FreeCommand extends SlashCommand {
     public data = new SlashCommandBuilder()
         .setName('free')
         .setDescription('Free a user from the tank')
-        .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption((option) =>
             option.setName('user').setDescription('The user to free').setRequired(true),
         );

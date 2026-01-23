@@ -14,7 +14,7 @@ export default class TankCommand extends SlashCommand {
     public data = new SlashCommandBuilder()
         .setName('tank')
         .setDescription('Send a user to the tank')
-        .setDefaultMemberPermissions(PermissionFlagsBits.MuteMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption((option) =>
             option.setName('user').setDescription('The user to tank').setRequired(true),
         )
