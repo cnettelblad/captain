@@ -78,6 +78,23 @@ export default class TankService {
     }
 
     /**
+     * Creates a tank sentence without adding the role (for manual role additions).
+     */
+    public async createManualSentence(
+        userId: string,
+        tankedBy: string | null,
+    ): Promise<void> {
+        await prisma.tankSentence.create({
+            data: {
+                userId,
+                tankedBy: tankedBy ?? 'manual',
+                reason: null,
+                expiresAt: null,
+            },
+        });
+    }
+
+    /**
      * Gets active (not freed) tank sentences for a user.
      */
     public async getActiveSentences(userId: string) {
