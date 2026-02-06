@@ -35,3 +35,11 @@ model TankSentence {
   freedBy   String?
   createdAt DateTime  @default(now())
 }
+
+model LastFmUser {
+  id             Int      @id @default(autoincrement())
+  userId         String   @unique
+  lastfmUsername String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+}
