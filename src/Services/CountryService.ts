@@ -63,4 +63,11 @@ export default class CountryService {
             orderBy: { createdAt: 'asc' },
         });
     }
+
+    public async getCountryUsers(countryCode: string) {
+        return prisma.userCountry.findMany({
+            where: { countryCode },
+            orderBy: { createdAt: 'asc' },
+        });
+    }
 }

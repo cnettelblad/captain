@@ -1,5 +1,5 @@
-import { prisma } from '../Services/Prisma.js';
-import countries from '../Data/countries.json' with { type: 'json' };
+import { prisma } from '#captain/Services/Prisma.js';
+import countries from '#captain/Data/countries.json' with { type: 'json' };
 export default class CountryService {
     resolveCountry(input) {
         const normalized = input.trim();
@@ -41,6 +41,12 @@ export default class CountryService {
     async getUserCountries(userId) {
         return prisma.userCountry.findMany({
             where: { userId },
+            orderBy: { createdAt: 'asc' },
+        });
+    }
+    async getCountryUsers(countryCode) {
+        return prisma.userCountry.findMany({
+            where: { countryCode },
             orderBy: { createdAt: 'asc' },
         });
     }

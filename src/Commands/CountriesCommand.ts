@@ -67,6 +67,17 @@ export default class CountriesCommand extends SlashCommand {
                         .setDescription('Country name, code, or flag emoji')
                         .setRequired(true),
                 ),
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('who')
+                .setDescription('See who has visited a country')
+                .addStringOption((option) =>
+                    option
+                        .setName('country')
+                        .setDescription('Country name, code, or flag emoji')
+                        .setRequired(true),
+                ),
         );
 
     public async execute(client: Client, interaction: ChatInputCommandInteraction): Promise<void> {
@@ -78,6 +89,8 @@ export default class CountriesCommand extends SlashCommand {
             await this.handleList(client, interaction);
         } else if (subcommand === 'remove') {
             await this.handleRemove(interaction);
+        } else if (subcommand === 'who') {
+            await this.handleWho(client, interaction);
         }
     }
 
@@ -334,6 +347,68 @@ export default class CountriesCommand extends SlashCommand {
                 embed.addFields({ name: '\u200b', value: chunk.join('\n'), inline: true });
             }
         }
+
+        await interaction.editReply({ embeds: [embed] });
+    }
+
+    private async handleWho(
+        client: Client,
+        interaction: ChatInputCommandInteraction,
+    ): Promise<void> {
+        const input = interaction.options.getString('country', true);
+        const countryService = new CountryService();
+        const country = countryService.resolveCountry(input);
+
+        if (!country && input.trim().length >= 3) {
+            const partialMatches = countryService.resolvePartial(input);
+
+            if (partialMatches.length === 1) {
+                return this.handleWhoForCountry(client, interaction, partialMatches[0]);
+            }
+        }
+
+        if (!country) {
+            await interaction.reply({
+                content: `Could not find a country matching "${input}".`,
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        return this.handleWhoForCountry(client, interaction, country);
+    }
+
+    private async handleWhoForCountry(
+        client: Client,
+        interaction: ChatInputCommandInteraction,
+        country: Country,
+    ): Promise<void> {
+        await interaction.deferReply();
+
+        const countryService = new CountryService();
+        const visitors = await countryService.getCountryUsers(country.code);
+
+        if (visitors.length === 0) {
+            await interaction.editReply(`Nobody has visited ${country.emoji} ${country.name} yet.`);
+            return;
+        }
+
+        const lines = await Promise.all(
+            visitors.map(async (v) => {
+                const user = await interaction.guild?.members.fetch(v.userId).catch(() => null);
+                if (!user) return null;
+                const name = `<@${v.userId}>`;
+                return v.note ? `${name} (${v.note})` : name;
+            }),
+        );
+
+        const filteredLines = lines.filter((line) => line !== null) as string[];
+
+        const embed = new EmbedBuilder()
+            .setTitle(`People who have been to ${country.emoji} ${country.name}`)
+            .setDescription(filteredLines.join('\n'))
+            .setColor(0x2383db)
+            .setFooter({ text: `${visitors.length} visitor${visitors.length === 1 ? '' : 's'}` });
 
         await interaction.editReply({ embeds: [embed] });
     }
