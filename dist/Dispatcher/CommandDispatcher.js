@@ -7,10 +7,13 @@ export default class CommandDispatcher {
     }
     async handle(interaction) {
         if (interaction.isChatInputCommand()) {
-            await this.handleCommand(interaction);
+            return this.handleCommand(interaction);
         }
-        else if (interaction.isButton()) {
-            await this.handleButton(interaction);
+        if (interaction.isButton()) {
+            return this.handleButton(interaction);
+        }
+        if (interaction.isStringSelectMenu()) {
+            return this.handleSelectMenu(interaction);
         }
     }
     async handleCommand(interaction) {
@@ -36,23 +39,40 @@ export default class CommandDispatcher {
             }
         }
     }
+    async handleSelectMenu(interaction) {
+        try {
+            if (interaction.customId.startsWith('countries_')) {
+                const countriesCommand = this.commands.get('countries');
+                return countriesCommand.handleSelectMenu(interaction);
+            }
+        }
+        catch (error) {
+            console.error(`Error handling select menu interaction:`, error);
+            const errorMessage = {
+                content: 'There was an error processing your selection!',
+                ephemeral: true,
+            };
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage);
+            }
+            else {
+                await interaction.reply(errorMessage);
+            }
+        }
+    }
     async handleButton(interaction) {
         try {
-            // Handle met command buttons
             if (interaction.customId.startsWith('met_')) {
                 const metCommand = this.commands.get('met');
-                if (metCommand) {
-                    await metCommand.handleButton(interaction);
-                }
-                return;
+                return metCommand.handleButton(interaction);
             }
-            // Handle meetup command buttons
             if (interaction.customId.startsWith('meetup_')) {
                 const meetupCommand = this.commands.get('meetup');
-                if (meetupCommand) {
-                    await meetupCommand.handleButton(interaction);
-                }
-                return;
+                return meetupCommand.handleButton(interaction);
+            }
+            if (interaction.customId.startsWith('countries_')) {
+                const countriesCommand = this.commands.get('countries');
+                return countriesCommand.handleButton(interaction);
             }
         }
         catch (error) {
