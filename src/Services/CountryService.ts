@@ -34,19 +34,26 @@ export default class CountryService {
         return countries.filter((c) => c.name.toLowerCase().includes(normalized));
     }
 
-    public async addCountry(
+    public async addOrUpdateCountry(
         userId: string,
         countryCode: string,
         visitedAt: Date | null,
         note: string | null,
     ) {
-        return prisma.userCountry.create({
-            data: {
-                userId,
-                countryCode,
-                visitedAt,
-                note,
-            },
+        const updateData: Record<string, unknown> = {};
+        if (visitedAt !== null) updateData.visitedAt = visitedAt;
+        if (note !== null) updateData.note = note;
+
+        return prisma.userCountry.upsert({
+            where: { userId_countryCode: { userId, countryCode } },
+            create: { userId, countryCode, visitedAt, note },
+            update: updateData,
+        });
+    }
+
+    public async removeCountry(userId: string, countryCode: string) {
+        return prisma.userCountry.delete({
+            where: { userId_countryCode: { userId, countryCode } },
         });
     }
 

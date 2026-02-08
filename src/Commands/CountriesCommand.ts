@@ -43,6 +43,17 @@ export default class CountriesCommand extends SlashCommand {
         )
         .addSubcommand((subcommand) =>
             subcommand.setName('list').setDescription('List the countries you have visited'),
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('remove')
+                .setDescription('Remove a country from your list')
+                .addStringOption((option) =>
+                    option
+                        .setName('country')
+                        .setDescription('Country name, code, or flag emoji')
+                        .setRequired(true),
+                ),
         );
 
     public async execute(client: Client, interaction: ChatInputCommandInteraction): Promise<void> {
@@ -52,6 +63,8 @@ export default class CountriesCommand extends SlashCommand {
             await this.handleAdd(client, interaction);
         } else if (subcommand === 'list') {
             await this.handleList(client, interaction);
+        } else if (subcommand === 'remove') {
+            await this.handleRemove(interaction);
         }
     }
 
@@ -94,17 +107,19 @@ export default class CountriesCommand extends SlashCommand {
             }
         }
 
-        try {
-            await countryService.addCountry(interaction.user.id, country.code, visitedAt, note);
-        } catch (error: any) {
-            if (error?.code === 'P2002') {
-                await interaction.reply({
-                    content: `You already have ${country.emoji} ${country.name} on your list.`,
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
-            }
-            throw error;
+        const result = await countryService.addOrUpdateCountry(interaction.user.id, country.code, visitedAt, note);
+        const isUpdate = result.createdAt.getTime() !== result.updatedAt.getTime();
+
+        if (isUpdate) {
+            const parts: string[] = [];
+            if (note) parts.push(`note: ${note}`);
+            if (visitedAt) parts.push(`visited: ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}`);
+
+            await interaction.reply({
+                content: `Updated ${country.emoji} ${country.name} (${parts.join(', ')})`,
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
         }
 
         let message = `${country.emoji} ${country.name} added to your visited countries!`;
@@ -113,6 +128,38 @@ export default class CountriesCommand extends SlashCommand {
         }
 
         await interaction.reply({ content: message, flags: MessageFlags.Ephemeral });
+    }
+
+    private async handleRemove(interaction: ChatInputCommandInteraction): Promise<void> {
+        const input = interaction.options.getString('country', true);
+        const countryService = new CountryService();
+        const country = countryService.resolveCountry(input);
+
+        if (!country) {
+            await interaction.reply({
+                content: `Could not find a country matching "${input}".`,
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        try {
+            await countryService.removeCountry(interaction.user.id, country.code);
+        } catch (error: any) {
+            if (error?.code === 'P2025') {
+                await interaction.reply({
+                    content: `${country.emoji} ${country.name} is not on your list.`,
+                    flags: MessageFlags.Ephemeral,
+                });
+                return;
+            }
+            throw error;
+        }
+
+        await interaction.reply({
+            content: `${country.emoji} ${country.name} removed from your visited countries.`,
+            flags: MessageFlags.Ephemeral,
+        });
     }
 
     public async handleButton(interaction: ButtonInteraction): Promise<void> {
@@ -142,18 +189,7 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        try {
-            await countryService.addCountry(interaction.user.id, country.code, null, null);
-        } catch (error: any) {
-            if (error?.code === 'P2002') {
-                await interaction.update({
-                    content: `You already have ${country.emoji} ${country.name} on your list.`,
-                    components: [],
-                });
-                return;
-            }
-            throw error;
-        }
+        await countryService.addOrUpdateCountry(interaction.user.id, country.code, null, null);
 
         await interaction.update({
             content: `${country.emoji} ${country.name} added to your visited countries!`,
@@ -191,18 +227,7 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        try {
-            await countryService.addCountry(interaction.user.id, country.code, null, null);
-        } catch (error: any) {
-            if (error?.code === 'P2002') {
-                await interaction.update({
-                    content: `You already have ${country.emoji} ${country.name} on your list.`,
-                    components: [],
-                });
-                return;
-            }
-            throw error;
-        }
+        await countryService.addOrUpdateCountry(interaction.user.id, country.code, null, null);
 
         await interaction.update({
             content: `${country.emoji} ${country.name} added to your visited countries!`,
