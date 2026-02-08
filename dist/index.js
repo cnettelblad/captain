@@ -1,12 +1,12 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
-import MessageCreate from '#captain/Event/MessageCreate.js';
-import CommandDispatcher from '#captain/Dispatcher/CommandDispatcher.js';
-import Job from '#captain/Jobs/Job.js';
+import MessageCreate from './Event/MessageCreate.js';
+import CommandDispatcher from './Dispatcher/CommandDispatcher.js';
+import Job from './Jobs/Job.js';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
-import SlashCommand from '#captain/Commands/SlashCommand.js';
+import SlashCommand from './Commands/SlashCommand.js';
 config();
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers],

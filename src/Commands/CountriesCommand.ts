@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 import {
     ActionRowBuilder,
@@ -14,7 +15,19 @@ import {
 } from 'discord.js';
 import CountryService, { Country } from '#captain/Services/CountryService.js';
 
+interface PendingAdd {
+    userId: string;
+    country: string;
+    visitedAt: Date | null;
+    note: string | null;
+    createdAt: number;
+}
+
+const PENDING_TTL = 15 * 60 * 1000;
+
 export default class CountriesCommand extends SlashCommand {
+    private pendingAdds = new Map<string, PendingAdd>();
+
     public data = new SlashCommandBuilder()
         .setName('countries')
         .setDescription('Track countries you have visited')
@@ -76,6 +89,18 @@ export default class CountriesCommand extends SlashCommand {
         const dateInput = interaction.options.getString('date');
         const note = interaction.options.getString('note');
 
+        let visitedAt: Date | null = null;
+        if (dateInput) {
+            visitedAt = new Date(dateInput);
+            if (isNaN(visitedAt.getTime())) {
+                await interaction.reply({
+                    content: 'Invalid date format. Use a format like 2024-06-15.',
+                    flags: MessageFlags.Ephemeral,
+                });
+                return;
+            }
+        }
+
         const countryService = new CountryService();
         const country = countryService.resolveCountry(input);
 
@@ -95,25 +120,21 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        let visitedAt: Date | null = null;
-        if (dateInput) {
-            visitedAt = new Date(dateInput);
-            if (isNaN(visitedAt.getTime())) {
-                await interaction.reply({
-                    content: 'Invalid date format. Use a format like 2024-06-15.',
-                    flags: MessageFlags.Ephemeral,
-                });
-                return;
-            }
-        }
-
-        const result = await countryService.addOrUpdateCountry(interaction.user.id, country.code, visitedAt, note);
+        const result = await countryService.addOrUpdateCountry(
+            interaction.user.id,
+            country.code,
+            visitedAt,
+            note,
+        );
         const isUpdate = result.createdAt.getTime() !== result.updatedAt.getTime();
 
         if (isUpdate) {
             const parts: string[] = [];
             if (note) parts.push(`note: ${note}`);
-            if (visitedAt) parts.push(`visited: ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}`);
+            if (visitedAt)
+                parts.push(
+                    `visited: ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}`,
+                );
 
             await interaction.reply({
                 content: `Updated ${country.emoji} ${country.name} (${parts.join(', ')})`,
@@ -165,9 +186,16 @@ export default class CountriesCommand extends SlashCommand {
     public async handleButton(interaction: ButtonInteraction): Promise<void> {
         const parts = interaction.customId.split('_');
         const action = parts[1];
-        const userId = parts[2];
+        const pendingId = parts[2];
 
-        if (interaction.user.id !== userId) {
+        const pending = this.pendingAdds.get(pendingId);
+
+        if (!pending) {
+            await interaction.update({ content: 'This interaction has expired.', components: [] });
+            return;
+        }
+
+        if (interaction.user.id !== pending.userId) {
             await interaction.reply({
                 content: 'This button is not for you!',
                 flags: MessageFlags.Ephemeral,
@@ -175,21 +203,27 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
+        this.pendingAdds.delete(pendingId);
+
         if (action === 'decline') {
             await interaction.update({ content: 'Cancelled.', components: [] });
             return;
         }
 
-        const countryCode = parts[3];
         const countryService = new CountryService();
-        const country = countryService.resolveCountry(countryCode);
+        const country = countryService.resolveCountry(pending.country);
 
         if (!country) {
             await interaction.update({ content: 'Could not find that country.', components: [] });
             return;
         }
 
-        await countryService.addOrUpdateCountry(interaction.user.id, country.code, null, null);
+        await countryService.addOrUpdateCountry(
+            interaction.user.id,
+            country.code,
+            pending.visitedAt,
+            pending.note,
+        );
 
         await interaction.update({
             content: `${country.emoji} ${country.name} added to your visited countries!`,
@@ -198,17 +232,26 @@ export default class CountriesCommand extends SlashCommand {
     }
 
     public async handleSelectMenu(interaction: StringSelectMenuInteraction): Promise<void> {
-        const [, action, userId] = interaction.customId.split('_');
+        const [, action, pendingId] = interaction.customId.split('_');
 
         if (action !== 'add') return;
 
-        if (interaction.user.id !== userId) {
+        const pending = this.pendingAdds.get(pendingId);
+
+        if (!pending) {
+            await interaction.update({ content: 'This interaction has expired.', components: [] });
+            return;
+        }
+
+        if (interaction.user.id !== pending.userId) {
             await interaction.reply({
                 content: 'This menu is not for you!',
                 flags: MessageFlags.Ephemeral,
             });
             return;
         }
+
+        this.pendingAdds.delete(pendingId);
 
         if (interaction.values[0] === 'none') {
             await interaction.update({
@@ -227,7 +270,12 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        await countryService.addOrUpdateCountry(interaction.user.id, country.code, null, null);
+        await countryService.addOrUpdateCountry(
+            interaction.user.id,
+            country.code,
+            pending.visitedAt,
+            pending.note,
+        );
 
         await interaction.update({
             content: `${country.emoji} ${country.name} added to your visited countries!`,
@@ -277,6 +325,25 @@ export default class CountriesCommand extends SlashCommand {
         interaction: ChatInputCommandInteraction,
         matches: Country[],
     ): Promise<void> {
+        const dateInput = interaction.options.getString('date');
+        const note = interaction.options.getString('note');
+
+        let visitedAt: Date | null = null;
+        if (dateInput) {
+            visitedAt = new Date(dateInput);
+            if (isNaN(visitedAt.getTime())) visitedAt = null;
+        }
+
+        this.cleanStalePending();
+        const pendingId = randomUUID();
+        this.pendingAdds.set(pendingId, {
+            userId: interaction.user.id,
+            country: matches[0].code,
+            visitedAt,
+            note,
+            createdAt: Date.now(),
+        });
+
         const options = matches.slice(0, 4).map((c) => ({
             label: c.name,
             value: c.code,
@@ -291,12 +358,12 @@ export default class CountriesCommand extends SlashCommand {
 
         if (options.length === 1) {
             const confirmButton = new ButtonBuilder()
-                .setCustomId(`countries_add_${interaction.user.id}_${options[0].value}`)
+                .setCustomId(`countries_add_${pendingId}`)
                 .setLabel(`Yes`)
                 .setStyle(ButtonStyle.Primary);
 
             const declineButton = new ButtonBuilder()
-                .setCustomId(`countries_decline_${interaction.user.id}`)
+                .setCustomId(`countries_decline_${pendingId}`)
                 .setLabel('No')
                 .setStyle(ButtonStyle.Danger);
 
@@ -314,7 +381,7 @@ export default class CountriesCommand extends SlashCommand {
         }
 
         const selectMenu = new StringSelectMenuBuilder()
-            .setCustomId(`countries_add_${interaction.user.id}`)
+            .setCustomId(`countries_add_${pendingId}`)
             .setPlaceholder('Select a country')
             .addOptions(options);
 
@@ -326,5 +393,14 @@ export default class CountriesCommand extends SlashCommand {
             flags: MessageFlags.Ephemeral,
         });
         return;
+    }
+
+    private cleanStalePending(): void {
+        const now = Date.now();
+        for (const [id, pending] of this.pendingAdds) {
+            if (now - pending.createdAt > PENDING_TTL) {
+                this.pendingAdds.delete(id);
+            }
+        }
     }
 }
