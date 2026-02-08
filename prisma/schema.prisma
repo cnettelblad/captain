@@ -35,3 +35,15 @@ model TankSentence {
   freedBy   String?
   createdAt DateTime  @default(now())
 }
+
+model UserCountry {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  countryCode String
+  note        String?
+  visitedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@unique([userId, countryCode])
+}
