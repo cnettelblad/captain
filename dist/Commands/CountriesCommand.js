@@ -213,9 +213,25 @@ export default class CountriesCommand extends SlashCommand {
         });
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Visited Countries`)
-            .setDescription(lines.join('\n'))
             .setColor(0x2383db)
-            .setFooter({ text: `${userCountries.length} countries visited` });
+            .setFooter({ text: `${userCountries.length} countries visited in total` });
+        let columnCount = 1;
+        if (lines.length > 20) {
+            columnCount = 3;
+        }
+        else if (lines.length > 10) {
+            columnCount = 2;
+        }
+        if (columnCount === 1) {
+            embed.setDescription(lines.join('\n'));
+        }
+        else {
+            const perColumn = Math.ceil(lines.length / columnCount);
+            for (let i = 0; i < columnCount; i++) {
+                const chunk = lines.slice(i * perColumn, (i + 1) * perColumn);
+                embed.addFields({ name: '\u200b', value: chunk.join('\n'), inline: true });
+            }
+        }
         await interaction.editReply({ embeds: [embed] });
     }
     async handlePartialMatches(interaction, matches) {
@@ -241,11 +257,6 @@ export default class CountriesCommand extends SlashCommand {
             value: c.code,
             emoji: c.emoji,
         }));
-        options.push({
-            label: 'None of the above',
-            value: 'none',
-            emoji: '❌',
-        });
         if (options.length === 1) {
             const confirmButton = new ButtonBuilder()
                 .setCustomId(`countries_add_${pendingId}`)
@@ -263,6 +274,11 @@ export default class CountriesCommand extends SlashCommand {
             });
             return;
         }
+        options.push({
+            label: 'None of the above',
+            value: 'none',
+            emoji: '❌',
+        });
         const selectMenu = new StringSelectMenuBuilder()
             .setCustomId(`countries_add_${pendingId}`)
             .setPlaceholder('Select a country')
