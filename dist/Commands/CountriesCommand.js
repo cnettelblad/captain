@@ -1,6 +1,6 @@
-import SlashCommand from '#captain/Commands/SlashCommand.js';
+import SlashCommand from '../Commands/SlashCommand.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, SlashCommandBuilder, StringSelectMenuBuilder, } from 'discord.js';
-import CountryService from '#captain/Services/CountryService.js';
+import CountryService from '../Services/CountryService.js';
 export default class CountriesCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('countries')
@@ -170,11 +170,16 @@ export default class CountriesCommand extends SlashCommand {
             await interaction.editReply("You haven't added any countries yet! Use `/countries add` to get started.");
             return;
         }
+        userCountries.sort((a, b) => {
+            const dateA = a.visitedAt ?? a.createdAt;
+            const dateB = b.visitedAt ?? b.createdAt;
+            return dateA.getTime() - dateB.getTime();
+        });
         const lines = userCountries.map((uc) => {
             const country = countryService.resolveCountry(uc.countryCode);
             const emoji = country?.emoji ?? '🏳️';
             const name = country?.name ?? uc.countryCode;
-            return `${emoji} ${name}`;
+            return uc.note ? `${emoji} ${name} (${uc.note})` : `${emoji} ${name}`;
         });
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Visited Countries`)

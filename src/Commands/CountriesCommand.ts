@@ -226,11 +226,17 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
+        userCountries.sort((a, b) => {
+            const dateA = a.visitedAt ?? a.createdAt;
+            const dateB = b.visitedAt ?? b.createdAt;
+            return dateA.getTime() - dateB.getTime();
+        });
+
         const lines = userCountries.map((uc) => {
             const country = countryService.resolveCountry(uc.countryCode);
             const emoji = country?.emoji ?? '🏳️';
             const name = country?.name ?? uc.countryCode;
-            return `${emoji} ${name}`;
+            return uc.note ? `${emoji} ${name} (${uc.note})` : `${emoji} ${name}`;
         });
 
         const embed = new EmbedBuilder()
