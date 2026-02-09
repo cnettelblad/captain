@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import SlashCommand from '#captain/Commands/SlashCommand.js';
+import SlashCommand from '../Commands/SlashCommand.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, SlashCommandBuilder, StringSelectMenuBuilder, } from 'discord.js';
-import CountryService from '#captain/Services/CountryService.js';
+import CountryService from '../Services/CountryService.js';
 const PENDING_TTL = 15 * 60 * 1000;
 export default class CountriesCommand extends SlashCommand {
     pendingAdds = new Map();

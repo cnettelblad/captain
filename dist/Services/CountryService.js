@@ -1,5 +1,5 @@
-import { prisma } from '#captain/Services/Prisma.js';
-import countries from '#captain/Data/countries.json' with { type: 'json' };
+import { prisma } from '../Services/Prisma.js';
+import countries from '../Data/countries.json' with { type: 'json' };
 export default class CountryService {
     resolveCountry(input) {
         const normalized = input.trim();
