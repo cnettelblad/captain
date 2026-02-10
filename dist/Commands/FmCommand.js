@@ -1,6 +1,6 @@
 import SlashCommand from '../Commands/SlashCommand.js';
 import { EmbedBuilder, MessageFlags, SlashCommandBuilder, } from 'discord.js';
-import LastFmService from '../Services/LastFm/LastFmService.js';
+import LastFmService from '../Services/LastFmService.js';
 export default class FmCommand extends SlashCommand {
     lastFmService = new LastFmService();
     data = new SlashCommandBuilder()
@@ -277,21 +277,11 @@ export default class FmCommand extends SlashCommand {
         const username1 = await this.getUsername(interaction.user);
         const username2 = await this.getUsername(targetUser);
         const comparison = await this.lastFmService.compareTaste(username1, username2);
-        const compatibilityEmoji = comparison.compatibility >= 70
-            ? '🔥'
-            : comparison.compatibility >= 50
-                ? '👍'
-                : comparison.compatibility >= 30
-                    ? '😐'
-                    : '😬';
+        const compatibilityEmoji = this.getCompatibilityEmoji(comparison.compatibility);
         const embed = new EmbedBuilder()
             .setTitle(`${compatibilityEmoji} Music Taste Compatibility`)
             .setDescription(`**${interaction.user.username}** and **${targetUser.username}** have **${comparison.compatibility}%** compatible music taste!`)
-            .setColor(comparison.compatibility >= 70
-            ? 0x22c55e
-            : comparison.compatibility >= 50
-                ? 0x3b82f6
-                : 0xef4444);
+            .setColor(this.getCompatibilityColor(comparison.compatibility));
         if (comparison.sharedArtists.length > 0) {
             embed.addFields({
                 name: 'Top Shared Artists',
@@ -310,6 +300,28 @@ export default class FmCommand extends SlashCommand {
             });
         }
         await interaction.editReply({ embeds: [embed] });
+    }
+    /**
+     * Get compatibility emoji based on score
+     */
+    getCompatibilityEmoji(score) {
+        if (score >= 70)
+            return '🔥';
+        if (score >= 50)
+            return '👍';
+        if (score >= 30)
+            return '😐';
+        return '😬';
+    }
+    /**
+     * Get embed color based on compatibility score
+     */
+    getCompatibilityColor(score) {
+        if (score >= 70)
+            return 0x22c55e; // Green
+        if (score >= 50)
+            return 0x3b82f6; // Blue
+        return 0xef4444; // Red
     }
     /**
      * Helper to get Last.fm username for a Discord user
