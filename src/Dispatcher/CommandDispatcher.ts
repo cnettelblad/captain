@@ -1,7 +1,8 @@
-import { ChatInputCommandInteraction, Interaction } from 'discord.js';
+import { ChatInputCommandInteraction, Interaction, StringSelectMenuInteraction } from 'discord.js';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 import MetCommand from '#captain/Commands/MetCommand.js';
 import MeetupCommand from '#captain/Commands/MeetupCommand.js';
+import CountriesCommand from '#captain/Commands/CountriesCommand.js';
 
 export default class CommandDispatcher {
     private commands: Map<string, SlashCommand> = new Map();
@@ -14,9 +15,15 @@ export default class CommandDispatcher {
 
     async handle(interaction: Interaction): Promise<void> {
         if (interaction.isChatInputCommand()) {
-            await this.handleCommand(interaction);
-        } else if (interaction.isButton()) {
-            await this.handleButton(interaction);
+            return this.handleCommand(interaction);
+        }
+
+        if (interaction.isButton()) {
+            return this.handleButton(interaction);
+        }
+
+        if (interaction.isStringSelectMenu()) {
+            return this.handleSelectMenu(interaction);
         }
     }
 
@@ -45,24 +52,43 @@ export default class CommandDispatcher {
         }
     }
 
+    private async handleSelectMenu(interaction: StringSelectMenuInteraction): Promise<void> {
+        try {
+            if (interaction.customId.startsWith('countries_')) {
+                const countriesCommand = this.commands.get('countries') as CountriesCommand;
+                return countriesCommand.handleSelectMenu(interaction);
+            }
+        } catch (error) {
+            console.error(`Error handling select menu interaction:`, error);
+
+            const errorMessage = {
+                content: 'There was an error processing your selection!',
+                ephemeral: true,
+            };
+
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage);
+            } else {
+                await interaction.reply(errorMessage);
+            }
+        }
+    }
+
     private async handleButton(interaction: import('discord.js').ButtonInteraction): Promise<void> {
         try {
-            // Handle met command buttons
             if (interaction.customId.startsWith('met_')) {
-                const metCommand = this.commands.get('met') as MetCommand | undefined;
-                if (metCommand) {
-                    await metCommand.handleButton(interaction);
-                }
-                return;
+                const metCommand = this.commands.get('met') as MetCommand;
+                return metCommand.handleButton(interaction);
             }
 
-            // Handle meetup command buttons
             if (interaction.customId.startsWith('meetup_')) {
-                const meetupCommand = this.commands.get('meetup') as MeetupCommand | undefined;
-                if (meetupCommand) {
-                    await meetupCommand.handleButton(interaction);
-                }
-                return;
+                const meetupCommand = this.commands.get('meetup') as MeetupCommand;
+                return meetupCommand.handleButton(interaction);
+            }
+
+            if (interaction.customId.startsWith('countries_')) {
+                const countriesCommand = this.commands.get('countries') as CountriesCommand;
+                return countriesCommand.handleButton(interaction);
             }
         } catch (error) {
             console.error(`Error handling button interaction:`, error);

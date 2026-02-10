@@ -42,4 +42,14 @@ model LastFmUser {
   lastfmUsername String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt
+model UserCountry {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  countryCode String
+  note        String?
+  visitedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@unique([userId, countryCode])
 }
