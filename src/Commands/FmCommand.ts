@@ -7,7 +7,7 @@ import {
     SlashCommandBuilder,
     User,
 } from 'discord.js';
-import LastFmService, { LastFmPeriod } from '#captain/Services/LastFm/LastFmService.js';
+import LastFmService, { LastFmPeriod } from '#captain/Services/LastFmService.js';
 
 export default class FmCommand extends SlashCommand {
     private lastFmService = new LastFmService();
@@ -392,27 +392,14 @@ export default class FmCommand extends SlashCommand {
 
         const comparison = await this.lastFmService.compareTaste(username1, username2);
 
-        const compatibilityEmoji =
-            comparison.compatibility >= 70
-                ? '🔥'
-                : comparison.compatibility >= 50
-                  ? '👍'
-                  : comparison.compatibility >= 30
-                    ? '😐'
-                    : '😬';
+        const compatibilityEmoji = this.getCompatibilityEmoji(comparison.compatibility);
 
         const embed = new EmbedBuilder()
             .setTitle(`${compatibilityEmoji} Music Taste Compatibility`)
             .setDescription(
                 `**${interaction.user.username}** and **${targetUser.username}** have **${comparison.compatibility}%** compatible music taste!`,
             )
-            .setColor(
-                comparison.compatibility >= 70
-                    ? 0x22c55e
-                    : comparison.compatibility >= 50
-                      ? 0x3b82f6
-                      : 0xef4444,
-            );
+            .setColor(this.getCompatibilityColor(comparison.compatibility));
 
         if (comparison.sharedArtists.length > 0) {
             embed.addFields({
@@ -435,6 +422,25 @@ export default class FmCommand extends SlashCommand {
         }
 
         await interaction.editReply({ embeds: [embed] });
+    }
+
+    /**
+     * Get compatibility emoji based on score
+     */
+    private getCompatibilityEmoji(score: number): string {
+        if (score >= 70) return '🔥';
+        if (score >= 50) return '👍';
+        if (score >= 30) return '😐';
+        return '😬';
+    }
+
+    /**
+     * Get embed color based on compatibility score
+     */
+    private getCompatibilityColor(score: number): number {
+        if (score >= 70) return 0x22c55e; // Green
+        if (score >= 50) return 0x3b82f6; // Blue
+        return 0xef4444; // Red
     }
 
     /**
