@@ -78,6 +78,17 @@ export default class CountriesCommand extends SlashCommand {
                         .setDescription('Country name, code, or flag emoji')
                         .setRequired(true),
                 ),
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('compare')
+                .setDescription('Compare visited countries with another user')
+                .addUserOption((option) =>
+                    option
+                        .setName('user')
+                        .setDescription('The user to compare with')
+                        .setRequired(true),
+                ),
         );
 
     public async execute(client: Client, interaction: ChatInputCommandInteraction): Promise<void> {
@@ -91,6 +102,8 @@ export default class CountriesCommand extends SlashCommand {
             await this.handleRemove(interaction);
         } else if (subcommand === 'who') {
             await this.handleWho(client, interaction);
+        } else if (subcommand === 'compare') {
+            await this.handleCompare(interaction);
         }
     }
 
@@ -409,6 +422,95 @@ export default class CountriesCommand extends SlashCommand {
             .setDescription(filteredLines.join('\n'))
             .setColor(0x2383db)
             .setFooter({ text: `${visitors.length} visitor${visitors.length === 1 ? '' : 's'}` });
+
+        await interaction.editReply({ embeds: [embed] });
+    }
+
+    private async handleCompare(interaction: ChatInputCommandInteraction): Promise<void> {
+        const targetUser = interaction.options.getUser('user', true);
+
+        if (targetUser.id === interaction.user.id) {
+            await interaction.reply({
+                content: "You can't compare with yourself!",
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
+        await interaction.deferReply();
+
+        const countryService = new CountryService();
+        const [userACountries, userBCountries] = await Promise.all([
+            countryService.getUserCountries(interaction.user.id),
+            countryService.getUserCountries(targetUser.id),
+        ]);
+
+        const userACodes = new Set(userACountries.map((c) => c.countryCode));
+        const userBCodes = new Set(userBCountries.map((c) => c.countryCode));
+        const allCodes = new Set([...userACodes, ...userBCodes]);
+
+        if (allCodes.size === 0) {
+            await interaction.editReply('Neither of you have added any countries yet!');
+            return;
+        }
+
+        const comparison = [...allCodes].map((code) => ({
+            country: countryService.resolveCountry(code),
+            code,
+            userA: userACodes.has(code),
+            userB: userBCodes.has(code),
+        }));
+
+        comparison.sort((a, b) => {
+            const aScore = a.userA && a.userB ? 0 : a.userA ? 1 : 2;
+            const bScore = b.userA && b.userB ? 0 : b.userA ? 1 : 2;
+            if (aScore !== bScore) return aScore - bScore;
+            const aName = a.country?.name ?? a.code;
+            const bName = b.country?.name ?? b.code;
+            return aName.localeCompare(bName);
+        });
+
+        const format = (entry: (typeof comparison)[0], isUserA: boolean) => {
+            const visited = isUserA ? entry.userA : entry.userB;
+            const name = entry.country?.name ?? entry.code;
+            const emoji = entry.country?.emoji ?? '🏳️';
+            return visited ? `${emoji} **${name}**` : `❌ ~~${name}~~`;
+        };
+
+        const columnA = comparison.map((e) => format(e, true)).join('\n');
+        const columnB = comparison.map((e) => format(e, false)).join('\n');
+
+        const bothCount = comparison.filter((e) => e.userA && e.userB).length;
+        const onlyACount = comparison.filter((e) => e.userA && !e.userB).length;
+        const onlyBCount = comparison.filter((e) => !e.userA && e.userB).length;
+
+        const userAMention = `<@${interaction.user.id}>`;
+        const userBMention = `<@${targetUser.id}>`;
+
+        const summaryLines = [
+            `${userAMention} and ${userBMention} have ${bothCount} countries in common`,
+        ];
+
+        if (onlyACount > 0) {
+            summaryLines.push(
+                `${userAMention} has visited ${onlyACount} country${onlyACount === 1 ? '' : 'ies'} that ${userBMention} hasn't been to.`,
+            );
+        }
+
+        if (onlyBCount > 0) {
+            summaryLines.push(
+                `${userBMention} has visited ${onlyBCount} country${onlyBCount === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`,
+            );
+        }
+
+        const embed = new EmbedBuilder()
+            .setTitle('Country Comparison')
+            .setDescription(summaryLines.join('\n'))
+            .setColor(0x2383db)
+            .addFields(
+                { name: interaction.user.displayName, value: columnA, inline: true },
+                { name: targetUser.displayName, value: columnB, inline: true },
+            );
 
         await interaction.editReply({ embeds: [embed] });
     }

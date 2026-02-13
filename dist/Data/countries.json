@@ -750,6 +750,11 @@
         "emoji": "🇳🇪"
     },
     {
+        "name": "Norfolk Island",
+        "code": "NF",
+        "emoji": "🇳🇫"
+    },
+    {
         "name": "Nigeria",
         "code": "NG",
         "emoji": "🇳🇬"
@@ -915,6 +920,11 @@
         "emoji": "🇸🇬"
     },
     {
+        "name": "Saint Helena",
+        "code": "SH",
+        "emoji": "🇸🇭"
+    },
+    {
         "name": "Slovenia",
         "code": "SI",
         "emoji": "🇸🇮"
@@ -1003,6 +1013,11 @@
         "name": "Tajikistan",
         "code": "TJ",
         "emoji": "🇹🇯"
+    },
+    {
+        "name": "Tokelau",
+        "code": "TK",
+        "emoji": "🇹🇰"
     },
     {
         "name": "Timor-Leste",
