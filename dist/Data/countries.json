@@ -175,6 +175,13 @@
         "parent": null
     },
     {
+        "code": "BL",
+        "name": "Saint Barthélemy",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇧🇱"
+    },
+    {
         "name": "Bermuda",
         "code": "BM",
         "emoji": "🇧🇲",
@@ -196,6 +203,13 @@
         "parent": null
     },
     {
+        "code": "BQ",
+        "name": "Caribbean Netherlands",
+        "un": false,
+        "parent": "NL",
+        "emoji": "🇧🇶"
+    },
+    {
         "name": "Brazil",
         "code": "BR",
         "emoji": "🇧🇷",
@@ -215,6 +229,13 @@
         "emoji": "🇧🇹",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "BV",
+        "name": "Bouvet Island",
+        "un": false,
+        "parent": "NO",
+        "emoji": "🇧🇻"
     },
     {
         "name": "Botswana",
@@ -243,6 +264,13 @@
         "emoji": "🇨🇦",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "CC",
+        "name": "Cocos (Keeling) Islands",
+        "un": false,
+        "parent": "AU",
+        "emoji": "🇨🇨"
     },
     {
         "name": "Congo - Kinshasa",
@@ -341,6 +369,13 @@
         "emoji": "🇨🇼",
         "un": false,
         "parent": "NL"
+    },
+    {
+        "code": "CX",
+        "name": "Christmas Island",
+        "un": false,
+        "parent": "AU",
+        "emoji": "🇨🇽"
     },
     {
         "name": "Cyprus",
@@ -518,6 +553,13 @@
         "parent": null
     },
     {
+        "code": "GF",
+        "name": "French Guiana",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇬🇫"
+    },
+    {
         "name": "Guernsey",
         "code": "GG",
         "emoji": "🇬🇬",
@@ -560,6 +602,13 @@
         "parent": null
     },
     {
+        "code": "GP",
+        "name": "Guadeloupe",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇬🇵"
+    },
+    {
         "name": "Equatorial Guinea",
         "code": "GQ",
         "emoji": "🇬🇶",
@@ -572,6 +621,13 @@
         "emoji": "🇬🇷",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "GS",
+        "name": "South Georgia & South Sandwich Islands",
+        "un": false,
+        "parent": "GB",
+        "emoji": "🇬🇸"
     },
     {
         "name": "Guatemala",
@@ -607,6 +663,13 @@
         "emoji": "🇭🇰",
         "un": false,
         "parent": "CN"
+    },
+    {
+        "code": "HM",
+        "name": "Heard & McDonald Islands",
+        "un": false,
+        "parent": "AU",
+        "emoji": "🇭🇲"
     },
     {
         "name": "Honduras",
@@ -670,6 +733,13 @@
         "emoji": "🇮🇳",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "IO",
+        "name": "British Indian Ocean Territory",
+        "un": false,
+        "parent": "GB",
+        "emoji": "🇮🇴"
     },
     {
         "name": "Iraq",
@@ -910,6 +980,13 @@
         "parent": null
     },
     {
+        "code": "MF",
+        "name": "Saint Martin",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇲🇫"
+    },
+    {
         "name": "Madagascar",
         "code": "MG",
         "emoji": "🇲🇬",
@@ -964,6 +1041,13 @@
         "emoji": "🇲🇵",
         "un": false,
         "parent": "US"
+    },
+    {
+        "code": "MQ",
+        "name": "Martinique",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇲🇶"
     },
     {
         "name": "Mauritania",
@@ -1169,6 +1253,13 @@
         "parent": null
     },
     {
+        "code": "PM",
+        "name": "Saint Pierre & Miquelon",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇵🇲"
+    },
+    {
         "name": "Pitcairn Islands",
         "code": "PN",
         "emoji": "🇵🇳",
@@ -1216,6 +1307,13 @@
         "emoji": "🇶🇦",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "RE",
+        "name": "Réunion",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇷🇪"
     },
     {
         "name": "Romania",
@@ -1300,6 +1398,13 @@
         "emoji": "🇸🇮",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "SJ",
+        "name": "Svalbard & Jan Mayen",
+        "un": false,
+        "parent": "NO",
+        "emoji": "🇸🇯"
     },
     {
         "name": "Slovakia",
@@ -1398,6 +1503,13 @@
         "emoji": "🇹🇩",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "TF",
+        "name": "French Southern Territories",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇹🇫"
     },
     {
         "name": "Togo",
@@ -1505,6 +1617,13 @@
         "parent": null
     },
     {
+        "code": "UM",
+        "name": "U.S. Outlying Islands",
+        "un": false,
+        "parent": "US",
+        "emoji": "🇺🇲"
+    },
+    {
         "name": "United States",
         "code": "US",
         "emoji": "🇺🇸",
@@ -1575,6 +1694,13 @@
         "parent": null
     },
     {
+        "code": "WF",
+        "name": "Wallis & Futuna",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇼🇫"
+    },
+    {
         "name": "Samoa",
         "code": "WS",
         "emoji": "🇼🇸",
@@ -1594,6 +1720,13 @@
         "emoji": "🇾🇪",
         "un": true,
         "parent": null
+    },
+    {
+        "code": "YT",
+        "name": "Mayotte",
+        "un": false,
+        "parent": "FR",
+        "emoji": "🇾🇹"
     },
     {
         "name": "South Africa",

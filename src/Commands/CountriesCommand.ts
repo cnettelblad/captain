@@ -146,36 +146,36 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        const result = await countryService.addOrUpdateCountry(
+        const changes = await countryService.addOrUpdateCountry(
             interaction.user.id,
             country.code,
             visitedAt,
             note,
         );
-        const isUpdate = result.createdAt.getTime() !== result.updatedAt.getTime();
 
-        if (isUpdate) {
+        const mainChange = changes.find((c) => c.code === country.code);
+        const parentChange = country.parent ? changes.find((c) => c.code === country.parent) : null;
+
+        let message: string;
+        if (mainChange?.action === 'updated') {
             const parts: string[] = [];
             if (note) parts.push(`note: ${note}`);
             if (visitedAt)
                 parts.push(
                     `visited: ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}`,
                 );
-
-            await interaction.reply({
-                content: `Updated ${country.emoji} ${country.name} (${parts.join(', ')})`,
-                flags: MessageFlags.Ephemeral,
-            });
-            return;
+            message = `Updated ${country.emoji} ${country.name} (${parts.join(', ')})`;
+        } else if (mainChange?.action === 'created') {
+            message = `${country.emoji} ${country.name} added to your visited countries!`;
+            if (visitedAt) {
+                message += ` (visited ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })})`;
+            }
+        } else {
+            message = `${country.emoji} ${country.name} is already on your list.`;
         }
 
-        let message = `${country.emoji} ${country.name} added to your visited countries!`;
-        if (visitedAt) {
-            message += ` (visited ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })})`;
-        }
-
-        if (country.parent) {
-            const parent = countryService.resolveCountry(country.parent);
+        if (parentChange) {
+            const parent = countryService.resolveCountry(country.parent!);
             if (parent) message += `\n${parent.emoji} ${parent.name} was also added.`;
         }
 
@@ -249,7 +249,7 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        await countryService.addOrUpdateCountry(
+        const changes = await countryService.addOrUpdateCountry(
             interaction.user.id,
             country.code,
             pending.visitedAt,
@@ -257,8 +257,9 @@ export default class CountriesCommand extends SlashCommand {
         );
 
         let message = `${country.emoji} ${country.name} added to your visited countries!`;
-        if (country.parent) {
-            const parent = countryService.resolveCountry(country.parent);
+        const parentChange = country.parent ? changes.find((c) => c.code === country.parent) : null;
+        if (parentChange) {
+            const parent = countryService.resolveCountry(country.parent!);
             if (parent) message += `\n${parent.emoji} ${parent.name} was also added.`;
         }
 
@@ -304,7 +305,7 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
 
-        await countryService.addOrUpdateCountry(
+        const changes = await countryService.addOrUpdateCountry(
             interaction.user.id,
             country.code,
             pending.visitedAt,
@@ -312,8 +313,9 @@ export default class CountriesCommand extends SlashCommand {
         );
 
         let message = `${country.emoji} ${country.name} added to your visited countries!`;
-        if (country.parent) {
-            const parent = countryService.resolveCountry(country.parent);
+        const parentChange = country.parent ? changes.find((c) => c.code === country.parent) : null;
+        if (parentChange) {
+            const parent = countryService.resolveCountry(country.parent!);
             if (parent) message += `\n${parent.emoji} ${parent.name} was also added.`;
         }
 

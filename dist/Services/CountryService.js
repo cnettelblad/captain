@@ -22,25 +22,39 @@ export default class CountryService {
         return countries.filter((c) => c.name.toLowerCase().includes(normalized));
     }
     async addOrUpdateCountry(userId, countryCode, visitedAt, note) {
-        const updateData = {};
-        if (visitedAt !== null)
-            updateData.visitedAt = visitedAt;
-        if (note !== null)
-            updateData.note = note;
-        const result = await prisma.userCountry.upsert({
+        const changes = [];
+        const existing = await prisma.userCountry.findUnique({
             where: { userId_countryCode: { userId, countryCode } },
-            create: { userId, countryCode, visitedAt, note },
-            update: updateData,
         });
+        if (!existing) {
+            await prisma.userCountry.create({ data: { userId, countryCode, visitedAt, note } });
+            changes.push({ code: countryCode, action: 'created' });
+        }
+        else {
+            const updateData = {};
+            if (visitedAt !== null)
+                updateData.visitedAt = visitedAt;
+            if (note !== null)
+                updateData.note = note;
+            if (Object.keys(updateData).length > 0) {
+                await prisma.userCountry.update({
+                    where: { userId_countryCode: { userId, countryCode } },
+                    data: updateData,
+                });
+                changes.push({ code: countryCode, action: 'updated' });
+            }
+        }
         const country = this.resolveCountry(countryCode);
         if (country && !country.un && country.parent) {
-            await prisma.userCountry.upsert({
+            const parentExists = await prisma.userCountry.findUnique({
                 where: { userId_countryCode: { userId, countryCode: country.parent } },
-                create: { userId, countryCode: country.parent },
-                update: {},
             });
+            if (!parentExists) {
+                await prisma.userCountry.create({ data: { userId, countryCode: country.parent } });
+                changes.push({ code: country.parent, action: 'created' });
+            }
         }
-        return result;
+        return changes;
     }
     getTerritoryCount() {
         return countries.filter((c) => !c.un).length;
