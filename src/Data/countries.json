@@ -2,1156 +2,1618 @@
     {
         "name": "Andorra",
         "code": "AD",
-        "emoji": "🇦🇩"
+        "emoji": "🇦🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "United Arab Emirates",
         "code": "AE",
-        "emoji": "🇦🇪"
+        "emoji": "🇦🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Afghanistan",
         "code": "AF",
-        "emoji": "🇦🇫"
+        "emoji": "🇦🇫",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Antigua & Barbuda",
         "code": "AG",
-        "emoji": "🇦🇬"
+        "emoji": "🇦🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Anguilla",
         "code": "AI",
-        "emoji": "🇦🇮"
+        "emoji": "🇦🇮",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Albania",
         "code": "AL",
-        "emoji": "🇦🇱"
+        "emoji": "🇦🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Armenia",
         "code": "AM",
-        "emoji": "🇦🇲"
+        "emoji": "🇦🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Angola",
         "code": "AO",
-        "emoji": "🇦🇴"
+        "emoji": "🇦🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Antarctica",
         "code": "AQ",
-        "emoji": "🇦🇶"
+        "emoji": "🇦🇶",
+        "un": false,
+        "parent": null
     },
     {
         "name": "Argentina",
         "code": "AR",
-        "emoji": "🇦🇷"
+        "emoji": "🇦🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "American Samoa",
         "code": "AS",
-        "emoji": "🇦🇸"
+        "emoji": "🇦🇸",
+        "un": false,
+        "parent": "US"
     },
     {
         "name": "Austria",
         "code": "AT",
-        "emoji": "🇦🇹"
+        "emoji": "🇦🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Australia",
         "code": "AU",
-        "emoji": "🇦🇺"
+        "emoji": "🇦🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Aruba",
         "code": "AW",
-        "emoji": "🇦🇼"
+        "emoji": "🇦🇼",
+        "un": false,
+        "parent": "NL"
     },
     {
         "name": "Åland Islands",
         "code": "AX",
-        "emoji": "🇦🇽"
+        "emoji": "🇦🇽",
+        "un": false,
+        "parent": "FI"
     },
     {
         "name": "Azerbaijan",
         "code": "AZ",
-        "emoji": "🇦🇿"
+        "emoji": "🇦🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bosnia & Herzegovina",
         "code": "BA",
-        "emoji": "🇧🇦"
+        "emoji": "🇧🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Barbados",
         "code": "BB",
-        "emoji": "🇧🇧"
+        "emoji": "🇧🇧",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bangladesh",
         "code": "BD",
-        "emoji": "🇧🇩"
+        "emoji": "🇧🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Belgium",
         "code": "BE",
-        "emoji": "🇧🇪"
+        "emoji": "🇧🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Burkina Faso",
         "code": "BF",
-        "emoji": "🇧🇫"
+        "emoji": "🇧🇫",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bulgaria",
         "code": "BG",
-        "emoji": "🇧🇬"
+        "emoji": "🇧🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bahrain",
         "code": "BH",
-        "emoji": "🇧🇭"
+        "emoji": "🇧🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Burundi",
         "code": "BI",
-        "emoji": "🇧🇮"
+        "emoji": "🇧🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Benin",
         "code": "BJ",
-        "emoji": "🇧🇯"
+        "emoji": "🇧🇯",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bermuda",
         "code": "BM",
-        "emoji": "🇧🇲"
+        "emoji": "🇧🇲",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Brunei",
         "code": "BN",
-        "emoji": "🇧🇳"
+        "emoji": "🇧🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bolivia",
         "code": "BO",
-        "emoji": "🇧🇴"
+        "emoji": "🇧🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Brazil",
         "code": "BR",
-        "emoji": "🇧🇷"
+        "emoji": "🇧🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bahamas",
         "code": "BS",
-        "emoji": "🇧🇸"
+        "emoji": "🇧🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Bhutan",
         "code": "BT",
-        "emoji": "🇧🇹"
+        "emoji": "🇧🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Botswana",
         "code": "BW",
-        "emoji": "🇧🇼"
+        "emoji": "🇧🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Belarus",
         "code": "BY",
-        "emoji": "🇧🇾"
+        "emoji": "🇧🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Belize",
         "code": "BZ",
-        "emoji": "🇧🇿"
+        "emoji": "🇧🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Canada",
         "code": "CA",
-        "emoji": "🇨🇦"
+        "emoji": "🇨🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Congo - Kinshasa",
         "code": "CD",
-        "emoji": "🇨🇩"
+        "emoji": "🇨🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Central African Republic",
         "code": "CF",
-        "emoji": "🇨🇫"
+        "emoji": "🇨🇫",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Congo - Brazzaville",
         "code": "CG",
-        "emoji": "🇨🇬"
+        "emoji": "🇨🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Switzerland",
         "code": "CH",
-        "emoji": "🇨🇭"
+        "emoji": "🇨🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Côte d’Ivoire",
         "code": "CI",
-        "emoji": "🇨🇮"
+        "emoji": "🇨🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cook Islands",
         "code": "CK",
-        "emoji": "🇨🇰"
+        "emoji": "🇨🇰",
+        "un": false,
+        "parent": "NZ"
     },
     {
         "name": "Chile",
         "code": "CL",
-        "emoji": "🇨🇱"
+        "emoji": "🇨🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cameroon",
         "code": "CM",
-        "emoji": "🇨🇲"
+        "emoji": "🇨🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "China",
         "code": "CN",
-        "emoji": "🇨🇳"
+        "emoji": "🇨🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Colombia",
         "code": "CO",
-        "emoji": "🇨🇴"
+        "emoji": "🇨🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Costa Rica",
         "code": "CR",
-        "emoji": "🇨🇷"
+        "emoji": "🇨🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cuba",
         "code": "CU",
-        "emoji": "🇨🇺"
+        "emoji": "🇨🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cape Verde",
         "code": "CV",
-        "emoji": "🇨🇻"
+        "emoji": "🇨🇻",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Curaçao",
         "code": "CW",
-        "emoji": "🇨🇼"
+        "emoji": "🇨🇼",
+        "un": false,
+        "parent": "NL"
     },
     {
         "name": "Cyprus",
         "code": "CY",
-        "emoji": "🇨🇾"
+        "emoji": "🇨🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Czechia",
         "code": "CZ",
-        "emoji": "🇨🇿"
+        "emoji": "🇨🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Germany",
         "code": "DE",
-        "emoji": "🇩🇪"
+        "emoji": "🇩🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Djibouti",
         "code": "DJ",
-        "emoji": "🇩🇯"
+        "emoji": "🇩🇯",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Denmark",
         "code": "DK",
-        "emoji": "🇩🇰"
+        "emoji": "🇩🇰",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Dominica",
         "code": "DM",
-        "emoji": "🇩🇲"
+        "emoji": "🇩🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Dominican Republic",
         "code": "DO",
-        "emoji": "🇩🇴"
+        "emoji": "🇩🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Algeria",
         "code": "DZ",
-        "emoji": "🇩🇿"
+        "emoji": "🇩🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Ecuador",
         "code": "EC",
-        "emoji": "🇪🇨"
+        "emoji": "🇪🇨",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Estonia",
         "code": "EE",
-        "emoji": "🇪🇪"
+        "emoji": "🇪🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Egypt",
         "code": "EG",
-        "emoji": "🇪🇬"
+        "emoji": "🇪🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Western Sahara",
         "code": "EH",
-        "emoji": "🇪🇭"
+        "emoji": "🇪🇭",
+        "un": false,
+        "parent": null
     },
     {
         "name": "Eritrea",
         "code": "ER",
-        "emoji": "🇪🇷"
+        "emoji": "🇪🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Spain",
         "code": "ES",
-        "emoji": "🇪🇸"
+        "emoji": "🇪🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Ethiopia",
         "code": "ET",
-        "emoji": "🇪🇹"
+        "emoji": "🇪🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Finland",
         "code": "FI",
-        "emoji": "🇫🇮"
+        "emoji": "🇫🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Fiji",
         "code": "FJ",
-        "emoji": "🇫🇯"
+        "emoji": "🇫🇯",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Falkland Islands",
         "code": "FK",
-        "emoji": "🇫🇰"
+        "emoji": "🇫🇰",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Micronesia",
         "code": "FM",
-        "emoji": "🇫🇲"
+        "emoji": "🇫🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Faroe Islands",
         "code": "FO",
-        "emoji": "🇫🇴"
+        "emoji": "🇫🇴",
+        "un": false,
+        "parent": "DK"
     },
     {
         "name": "France",
         "code": "FR",
-        "emoji": "🇫🇷"
+        "emoji": "🇫🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Gabon",
         "code": "GA",
-        "emoji": "🇬🇦"
+        "emoji": "🇬🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "United Kingdom",
         "code": "GB",
-        "emoji": "🇬🇧"
+        "emoji": "🇬🇧",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Grenada",
         "code": "GD",
-        "emoji": "🇬🇩"
+        "emoji": "🇬🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Georgia",
         "code": "GE",
-        "emoji": "🇬🇪"
+        "emoji": "🇬🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Guernsey",
         "code": "GG",
-        "emoji": "🇬🇬"
+        "emoji": "🇬🇬",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Ghana",
         "code": "GH",
-        "emoji": "🇬🇭"
+        "emoji": "🇬🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Gibraltar",
         "code": "GI",
-        "emoji": "🇬🇮"
+        "emoji": "🇬🇮",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Greenland",
         "code": "GL",
-        "emoji": "🇬🇱"
+        "emoji": "🇬🇱",
+        "un": false,
+        "parent": "DK"
     },
     {
         "name": "Gambia",
         "code": "GM",
-        "emoji": "🇬🇲"
+        "emoji": "🇬🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Guinea",
         "code": "GN",
-        "emoji": "🇬🇳"
+        "emoji": "🇬🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Equatorial Guinea",
         "code": "GQ",
-        "emoji": "🇬🇶"
+        "emoji": "🇬🇶",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Greece",
         "code": "GR",
-        "emoji": "🇬🇷"
+        "emoji": "🇬🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Guatemala",
         "code": "GT",
-        "emoji": "🇬🇹"
+        "emoji": "🇬🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Guam",
         "code": "GU",
-        "emoji": "🇬🇺"
+        "emoji": "🇬🇺",
+        "un": false,
+        "parent": "US"
     },
     {
         "name": "Guinea-Bissau",
         "code": "GW",
-        "emoji": "🇬🇼"
+        "emoji": "🇬🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Guyana",
         "code": "GY",
-        "emoji": "🇬🇾"
+        "emoji": "🇬🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Hong Kong SAR China",
         "code": "HK",
-        "emoji": "🇭🇰"
+        "emoji": "🇭🇰",
+        "un": false,
+        "parent": "CN"
     },
     {
         "name": "Honduras",
         "code": "HN",
-        "emoji": "🇭🇳"
+        "emoji": "🇭🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Croatia",
         "code": "HR",
-        "emoji": "🇭🇷"
+        "emoji": "🇭🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Haiti",
         "code": "HT",
-        "emoji": "🇭🇹"
+        "emoji": "🇭🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Hungary",
         "code": "HU",
-        "emoji": "🇭🇺"
+        "emoji": "🇭🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Indonesia",
         "code": "ID",
-        "emoji": "🇮🇩"
+        "emoji": "🇮🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Ireland",
         "code": "IE",
-        "emoji": "🇮🇪"
+        "emoji": "🇮🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Israel",
         "code": "IL",
-        "emoji": "🇮🇱"
+        "emoji": "🇮🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Isle of Man",
         "code": "IM",
-        "emoji": "🇮🇲"
+        "emoji": "🇮🇲",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "India",
         "code": "IN",
-        "emoji": "🇮🇳"
+        "emoji": "🇮🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Iraq",
         "code": "IQ",
-        "emoji": "🇮🇶"
+        "emoji": "🇮🇶",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Iran",
         "code": "IR",
-        "emoji": "🇮🇷"
+        "emoji": "🇮🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Iceland",
         "code": "IS",
-        "emoji": "🇮🇸"
+        "emoji": "🇮🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Italy",
         "code": "IT",
-        "emoji": "🇮🇹"
+        "emoji": "🇮🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Jersey",
         "code": "JE",
-        "emoji": "🇯🇪"
+        "emoji": "🇯🇪",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Jamaica",
         "code": "JM",
-        "emoji": "🇯🇲"
+        "emoji": "🇯🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Jordan",
         "code": "JO",
-        "emoji": "🇯🇴"
+        "emoji": "🇯🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Japan",
         "code": "JP",
-        "emoji": "🇯🇵"
+        "emoji": "🇯🇵",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Kenya",
         "code": "KE",
-        "emoji": "🇰🇪"
+        "emoji": "🇰🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Kyrgyzstan",
         "code": "KG",
-        "emoji": "🇰🇬"
+        "emoji": "🇰🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cambodia",
         "code": "KH",
-        "emoji": "🇰🇭"
+        "emoji": "🇰🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Kiribati",
         "code": "KI",
-        "emoji": "🇰🇮"
+        "emoji": "🇰🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Comoros",
         "code": "KM",
-        "emoji": "🇰🇲"
+        "emoji": "🇰🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "St. Kitts & Nevis",
         "code": "KN",
-        "emoji": "🇰🇳"
+        "emoji": "🇰🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "North Korea",
         "code": "KP",
-        "emoji": "🇰🇵"
+        "emoji": "🇰🇵",
+        "un": true,
+        "parent": null
     },
     {
         "name": "South Korea",
         "code": "KR",
-        "emoji": "🇰🇷"
+        "emoji": "🇰🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Kuwait",
         "code": "KW",
-        "emoji": "🇰🇼"
+        "emoji": "🇰🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Cayman Islands",
         "code": "KY",
-        "emoji": "🇰🇾"
+        "emoji": "🇰🇾",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Kazakhstan",
         "code": "KZ",
-        "emoji": "🇰🇿"
+        "emoji": "🇰🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Laos",
         "code": "LA",
-        "emoji": "🇱🇦"
+        "emoji": "🇱🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Lebanon",
         "code": "LB",
-        "emoji": "🇱🇧"
+        "emoji": "🇱🇧",
+        "un": true,
+        "parent": null
     },
     {
         "name": "St. Lucia",
         "code": "LC",
-        "emoji": "🇱🇨"
+        "emoji": "🇱🇨",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Liechtenstein",
         "code": "LI",
-        "emoji": "🇱🇮"
+        "emoji": "🇱🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Sri Lanka",
         "code": "LK",
-        "emoji": "🇱🇰"
+        "emoji": "🇱🇰",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Liberia",
         "code": "LR",
-        "emoji": "🇱🇷"
+        "emoji": "🇱🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Lesotho",
         "code": "LS",
-        "emoji": "🇱🇸"
+        "emoji": "🇱🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Lithuania",
         "code": "LT",
-        "emoji": "🇱🇹"
+        "emoji": "🇱🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Luxembourg",
         "code": "LU",
-        "emoji": "🇱🇺"
+        "emoji": "🇱🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Latvia",
         "code": "LV",
-        "emoji": "🇱🇻"
+        "emoji": "🇱🇻",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Libya",
         "code": "LY",
-        "emoji": "🇱🇾"
+        "emoji": "🇱🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Morocco",
         "code": "MA",
-        "emoji": "🇲🇦"
+        "emoji": "🇲🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Monaco",
         "code": "MC",
-        "emoji": "🇲🇨"
+        "emoji": "🇲🇨",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Moldova",
         "code": "MD",
-        "emoji": "🇲🇩"
+        "emoji": "🇲🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Montenegro",
         "code": "ME",
-        "emoji": "🇲🇪"
+        "emoji": "🇲🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Madagascar",
         "code": "MG",
-        "emoji": "🇲🇬"
+        "emoji": "🇲🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Marshall Islands",
         "code": "MH",
-        "emoji": "🇲🇭"
+        "emoji": "🇲🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "North Macedonia",
         "code": "MK",
-        "emoji": "🇲🇰"
+        "emoji": "🇲🇰",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Mali",
         "code": "ML",
-        "emoji": "🇲🇱"
+        "emoji": "🇲🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Myanmar (Burma)",
         "code": "MM",
-        "emoji": "🇲🇲"
+        "emoji": "🇲🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Mongolia",
         "code": "MN",
-        "emoji": "🇲🇳"
+        "emoji": "🇲🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Macao SAR China",
         "code": "MO",
-        "emoji": "🇲🇴"
+        "emoji": "🇲🇴",
+        "un": false,
+        "parent": "CN"
     },
     {
         "name": "Northern Mariana Islands",
         "code": "MP",
-        "emoji": "🇲🇵"
+        "emoji": "🇲🇵",
+        "un": false,
+        "parent": "US"
     },
     {
         "name": "Mauritania",
         "code": "MR",
-        "emoji": "🇲🇷"
+        "emoji": "🇲🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Montserrat",
         "code": "MS",
-        "emoji": "🇲🇸"
+        "emoji": "🇲🇸",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Malta",
         "code": "MT",
-        "emoji": "🇲🇹"
+        "emoji": "🇲🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Mauritius",
         "code": "MU",
-        "emoji": "🇲🇺"
+        "emoji": "🇲🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Maldives",
         "code": "MV",
-        "emoji": "🇲🇻"
+        "emoji": "🇲🇻",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Malawi",
         "code": "MW",
-        "emoji": "🇲🇼"
+        "emoji": "🇲🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Mexico",
         "code": "MX",
-        "emoji": "🇲🇽"
+        "emoji": "🇲🇽",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Malaysia",
         "code": "MY",
-        "emoji": "🇲🇾"
+        "emoji": "🇲🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Mozambique",
         "code": "MZ",
-        "emoji": "🇲🇿"
+        "emoji": "🇲🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Namibia",
         "code": "NA",
-        "emoji": "🇳🇦"
+        "emoji": "🇳🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "New Caledonia",
         "code": "NC",
-        "emoji": "🇳🇨"
+        "emoji": "🇳🇨",
+        "un": false,
+        "parent": "FR"
     },
     {
         "name": "Niger",
         "code": "NE",
-        "emoji": "🇳🇪"
+        "emoji": "🇳🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Norfolk Island",
         "code": "NF",
-        "emoji": "🇳🇫"
+        "emoji": "🇳🇫",
+        "un": false,
+        "parent": "AU"
     },
     {
         "name": "Nigeria",
         "code": "NG",
-        "emoji": "🇳🇬"
+        "emoji": "🇳🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Nicaragua",
         "code": "NI",
-        "emoji": "🇳🇮"
+        "emoji": "🇳🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Netherlands",
         "code": "NL",
-        "emoji": "🇳🇱"
+        "emoji": "🇳🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Norway",
         "code": "NO",
-        "emoji": "🇳🇴"
+        "emoji": "🇳🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Nepal",
         "code": "NP",
-        "emoji": "🇳🇵"
+        "emoji": "🇳🇵",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Nauru",
         "code": "NR",
-        "emoji": "🇳🇷"
+        "emoji": "🇳🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Niue",
         "code": "NU",
-        "emoji": "🇳🇺"
+        "emoji": "🇳🇺",
+        "un": false,
+        "parent": "NZ"
     },
     {
         "name": "New Zealand",
         "code": "NZ",
-        "emoji": "🇳🇿"
+        "emoji": "🇳🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Oman",
         "code": "OM",
-        "emoji": "🇴🇲"
+        "emoji": "🇴🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Panama",
         "code": "PA",
-        "emoji": "🇵🇦"
+        "emoji": "🇵🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Peru",
         "code": "PE",
-        "emoji": "🇵🇪"
+        "emoji": "🇵🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "French Polynesia",
         "code": "PF",
-        "emoji": "🇵🇫"
+        "emoji": "🇵🇫",
+        "un": false,
+        "parent": "FR"
     },
     {
         "name": "Papua New Guinea",
         "code": "PG",
-        "emoji": "🇵🇬"
+        "emoji": "🇵🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Philippines",
         "code": "PH",
-        "emoji": "🇵🇭"
+        "emoji": "🇵🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Pakistan",
         "code": "PK",
-        "emoji": "🇵🇰"
+        "emoji": "🇵🇰",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Poland",
         "code": "PL",
-        "emoji": "🇵🇱"
+        "emoji": "🇵🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Pitcairn Islands",
         "code": "PN",
-        "emoji": "🇵🇳"
+        "emoji": "🇵🇳",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Puerto Rico",
         "code": "PR",
-        "emoji": "🇵🇷"
+        "emoji": "🇵🇷",
+        "un": false,
+        "parent": "US"
     },
     {
         "name": "Palestinian Territories",
         "code": "PS",
-        "emoji": "🇵🇸"
+        "emoji": "🇵🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Portugal",
         "code": "PT",
-        "emoji": "🇵🇹"
+        "emoji": "🇵🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Palau",
         "code": "PW",
-        "emoji": "🇵🇼"
+        "emoji": "🇵🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Paraguay",
         "code": "PY",
-        "emoji": "🇵🇾"
+        "emoji": "🇵🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Qatar",
         "code": "QA",
-        "emoji": "🇶🇦"
+        "emoji": "🇶🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Romania",
         "code": "RO",
-        "emoji": "🇷🇴"
+        "emoji": "🇷🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Serbia",
         "code": "RS",
-        "emoji": "🇷🇸"
+        "emoji": "🇷🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Russia",
         "code": "RU",
-        "emoji": "🇷🇺"
+        "emoji": "🇷🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Rwanda",
         "code": "RW",
-        "emoji": "🇷🇼"
+        "emoji": "🇷🇼",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Saudi Arabia",
         "code": "SA",
-        "emoji": "🇸🇦"
+        "emoji": "🇸🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Solomon Islands",
         "code": "SB",
-        "emoji": "🇸🇧"
+        "emoji": "🇸🇧",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Seychelles",
         "code": "SC",
-        "emoji": "🇸🇨"
+        "emoji": "🇸🇨",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Sudan",
         "code": "SD",
-        "emoji": "🇸🇩"
+        "emoji": "🇸🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Sweden",
         "code": "SE",
-        "emoji": "🇸🇪"
+        "emoji": "🇸🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Singapore",
         "code": "SG",
-        "emoji": "🇸🇬"
+        "emoji": "🇸🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Saint Helena",
         "code": "SH",
-        "emoji": "🇸🇭"
+        "emoji": "🇸🇭",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Slovenia",
         "code": "SI",
-        "emoji": "🇸🇮"
+        "emoji": "🇸🇮",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Slovakia",
         "code": "SK",
-        "emoji": "🇸🇰"
+        "emoji": "🇸🇰",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Sierra Leone",
         "code": "SL",
-        "emoji": "🇸🇱"
+        "emoji": "🇸🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "San Marino",
         "code": "SM",
-        "emoji": "🇸🇲"
+        "emoji": "🇸🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Senegal",
         "code": "SN",
-        "emoji": "🇸🇳"
+        "emoji": "🇸🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Somalia",
         "code": "SO",
-        "emoji": "🇸🇴"
+        "emoji": "🇸🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Suriname",
         "code": "SR",
-        "emoji": "🇸🇷"
+        "emoji": "🇸🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "South Sudan",
         "code": "SS",
-        "emoji": "🇸🇸"
+        "emoji": "🇸🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "São Tomé & Príncipe",
         "code": "ST",
-        "emoji": "🇸🇹"
+        "emoji": "🇸🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "El Salvador",
         "code": "SV",
-        "emoji": "🇸🇻"
+        "emoji": "🇸🇻",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Sint Maarten",
         "code": "SX",
-        "emoji": "🇸🇽"
+        "emoji": "🇸🇽",
+        "un": false,
+        "parent": "NL"
     },
     {
         "name": "Syria",
         "code": "SY",
-        "emoji": "🇸🇾"
+        "emoji": "🇸🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Eswatini",
         "code": "SZ",
-        "emoji": "🇸🇿"
+        "emoji": "🇸🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Turks & Caicos Islands",
         "code": "TC",
-        "emoji": "🇹🇨"
+        "emoji": "🇹🇨",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "Chad",
         "code": "TD",
-        "emoji": "🇹🇩"
+        "emoji": "🇹🇩",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Togo",
         "code": "TG",
-        "emoji": "🇹🇬"
+        "emoji": "🇹🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Thailand",
         "code": "TH",
-        "emoji": "🇹🇭"
+        "emoji": "🇹🇭",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Tajikistan",
         "code": "TJ",
-        "emoji": "🇹🇯"
+        "emoji": "🇹🇯",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Tokelau",
         "code": "TK",
-        "emoji": "🇹🇰"
+        "emoji": "🇹🇰",
+        "un": false,
+        "parent": "NZ"
     },
     {
         "name": "Timor-Leste",
         "code": "TL",
-        "emoji": "🇹🇱"
+        "emoji": "🇹🇱",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Turkmenistan",
         "code": "TM",
-        "emoji": "🇹🇲"
+        "emoji": "🇹🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Tunisia",
         "code": "TN",
-        "emoji": "🇹🇳"
+        "emoji": "🇹🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Tonga",
         "code": "TO",
-        "emoji": "🇹🇴"
+        "emoji": "🇹🇴",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Turkey",
         "code": "TR",
-        "emoji": "🇹🇷"
+        "emoji": "🇹🇷",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Trinidad & Tobago",
         "code": "TT",
-        "emoji": "🇹🇹"
+        "emoji": "🇹🇹",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Tuvalu",
         "code": "TV",
-        "emoji": "🇹🇻"
+        "emoji": "🇹🇻",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Taiwan",
         "code": "TW",
-        "emoji": "🇹🇼"
+        "emoji": "🇹🇼",
+        "un": false,
+        "parent": null
     },
     {
         "name": "Tanzania",
         "code": "TZ",
-        "emoji": "🇹🇿"
+        "emoji": "🇹🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Ukraine",
         "code": "UA",
-        "emoji": "🇺🇦"
+        "emoji": "🇺🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Uganda",
         "code": "UG",
-        "emoji": "🇺🇬"
+        "emoji": "🇺🇬",
+        "un": true,
+        "parent": null
     },
     {
         "name": "United States",
         "code": "US",
-        "emoji": "🇺🇸"
+        "emoji": "🇺🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Uruguay",
         "code": "UY",
-        "emoji": "🇺🇾"
+        "emoji": "🇺🇾",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Uzbekistan",
         "code": "UZ",
-        "emoji": "🇺🇿"
+        "emoji": "🇺🇿",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Vatican City",
         "code": "VA",
-        "emoji": "🇻🇦"
+        "emoji": "🇻🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "St. Vincent & Grenadines",
         "code": "VC",
-        "emoji": "🇻🇨"
+        "emoji": "🇻🇨",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Venezuela",
         "code": "VE",
-        "emoji": "🇻🇪"
+        "emoji": "🇻🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "British Virgin Islands",
         "code": "VG",
-        "emoji": "🇻🇬"
+        "emoji": "🇻🇬",
+        "un": false,
+        "parent": "GB"
     },
     {
         "name": "U.S. Virgin Islands",
         "code": "VI",
-        "emoji": "🇻🇮"
+        "emoji": "🇻🇮",
+        "un": false,
+        "parent": "US"
     },
     {
         "name": "Vietnam",
         "code": "VN",
-        "emoji": "🇻🇳"
+        "emoji": "🇻🇳",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Vanuatu",
         "code": "VU",
-        "emoji": "🇻🇺"
+        "emoji": "🇻🇺",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Samoa",
         "code": "WS",
-        "emoji": "🇼🇸"
+        "emoji": "🇼🇸",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Kosovo",
         "code": "XK",
-        "emoji": "🇽🇰"
+        "emoji": "🇽🇰",
+        "un": false,
+        "parent": null
     },
     {
         "name": "Yemen",
         "code": "YE",
-        "emoji": "🇾🇪"
+        "emoji": "🇾🇪",
+        "un": true,
+        "parent": null
     },
     {
         "name": "South Africa",
         "code": "ZA",
-        "emoji": "🇿🇦"
+        "emoji": "🇿🇦",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Zambia",
         "code": "ZM",
-        "emoji": "🇿🇲"
+        "emoji": "🇿🇲",
+        "un": true,
+        "parent": null
     },
     {
         "name": "Zimbabwe",
         "code": "ZW",
-        "emoji": "🇿🇼"
+        "emoji": "🇿🇼",
+        "un": true,
+        "parent": null
     }
 ]

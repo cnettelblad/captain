@@ -111,6 +111,11 @@ export default class CountriesCommand extends SlashCommand {
         if (visitedAt) {
             message += ` (visited ${visitedAt.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })})`;
         }
+        if (country.parent) {
+            const parent = countryService.resolveCountry(country.parent);
+            if (parent)
+                message += `\n${parent.emoji} ${parent.name} was also added.`;
+        }
         await interaction.reply({ content: message, flags: MessageFlags.Ephemeral });
     }
     async handleRemove(interaction) {
@@ -170,10 +175,13 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
         await countryService.addOrUpdateCountry(interaction.user.id, country.code, pending.visitedAt, pending.note);
-        await interaction.update({
-            content: `${country.emoji} ${country.name} added to your visited countries!`,
-            components: [],
-        });
+        let message = `${country.emoji} ${country.name} added to your visited countries!`;
+        if (country.parent) {
+            const parent = countryService.resolveCountry(country.parent);
+            if (parent)
+                message += `\n${parent.emoji} ${parent.name} was also added.`;
+        }
+        await interaction.update({ content: message, components: [] });
     }
     async handleSelectMenu(interaction) {
         const [, action, pendingId] = interaction.customId.split('_');
@@ -207,10 +215,13 @@ export default class CountriesCommand extends SlashCommand {
             return;
         }
         await countryService.addOrUpdateCountry(interaction.user.id, country.code, pending.visitedAt, pending.note);
-        await interaction.update({
-            content: `${country.emoji} ${country.name} added to your visited countries!`,
-            components: [],
-        });
+        let message = `${country.emoji} ${country.name} added to your visited countries!`;
+        if (country.parent) {
+            const parent = countryService.resolveCountry(country.parent);
+            if (parent)
+                message += `\n${parent.emoji} ${parent.name} was also added.`;
+        }
+        await interaction.update({ content: message, components: [] });
     }
     async handleList(client, interaction) {
         await interaction.deferReply();
@@ -225,16 +236,22 @@ export default class CountriesCommand extends SlashCommand {
             const dateB = b.visitedAt ?? b.createdAt;
             return dateA.getTime() - dateB.getTime();
         });
-        const lines = userCountries.map((uc) => {
-            const country = countryService.resolveCountry(uc.countryCode);
+        const resolved = userCountries.map((uc) => ({
+            record: uc,
+            country: countryService.resolveCountry(uc.countryCode),
+        }));
+        const lines = resolved.map(({ record, country }) => {
             const emoji = country?.emoji ?? '🏳️';
-            const name = country?.name ?? uc.countryCode;
-            return uc.note ? `${emoji} ${name} (${uc.note})` : `${emoji} ${name}`;
+            const name = country?.name ?? record.countryCode;
+            return record.note ? `${emoji} ${name} (${record.note})` : `${emoji} ${name}`;
         });
+        const unCount = resolved.filter(({ country }) => country?.un).length;
+        const territoryCount = resolved.filter(({ country }) => country && !country.un).length;
+        const totalTerritories = countryService.getTerritoryCount();
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.displayName}'s Visited Countries`)
             .setColor(0x2383db)
-            .setFooter({ text: `${userCountries.length} countries visited in total` });
+            .setFooter({ text: `${unCount}/195 UN countries · ${territoryCount}/${totalTerritories} ISO 3166 territories` });
         let columnCount = 1;
         if (lines.length > 20) {
             columnCount = 3;

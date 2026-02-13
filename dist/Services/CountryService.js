@@ -27,11 +27,23 @@ export default class CountryService {
             updateData.visitedAt = visitedAt;
         if (note !== null)
             updateData.note = note;
-        return prisma.userCountry.upsert({
+        const result = await prisma.userCountry.upsert({
             where: { userId_countryCode: { userId, countryCode } },
             create: { userId, countryCode, visitedAt, note },
             update: updateData,
         });
+        const country = this.resolveCountry(countryCode);
+        if (country && !country.un && country.parent) {
+            await prisma.userCountry.upsert({
+                where: { userId_countryCode: { userId, countryCode: country.parent } },
+                create: { userId, countryCode: country.parent },
+                update: {},
+            });
+        }
+        return result;
+    }
+    getTerritoryCount() {
+        return countries.filter((c) => !c.un).length;
     }
     async removeCountry(userId, countryCode) {
         return prisma.userCountry.delete({
