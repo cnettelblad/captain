@@ -480,6 +480,10 @@ export default class CountriesCommand extends SlashCommand {
                 `${userBMention} has visited ${onlyBCodes.length} country${onlyBCodes.length === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`,
             );
 
+        summaryLines.push(
+            `In total they have visited ${userACodes.size + userBCodes.size - commonCodes.length} unique countries.`,
+        );
+
         const embed = new EmbedBuilder()
             .setTitle('Country Comparison')
             .setDescription(summaryLines.join('\n'))
@@ -488,25 +492,25 @@ export default class CountriesCommand extends SlashCommand {
 
         const onlyALines = resolve(onlyACodes).map(formatLine);
         const onlyBLines = resolve(onlyBCodes).map(formatLine);
+        const commonLines = resolve(commonCodes).map(formatLine);
+
+        if (commonLines.length > 0) {
+            embed.addFields({ name: 'In Common', value: commonLines.join('\n'), inline: false });
+        }
 
         if (onlyALines.length > 0 || onlyBLines.length > 0) {
             embed.addFields(
                 {
-                    name: `${interaction.user.displayName}`,
+                    name: `${interaction.user.displayName} (${onlyALines.length})`,
                     value: onlyALines.join('\n') || '\u200b',
                     inline: true,
                 },
                 {
-                    name: `${targetUser.displayName}`,
+                    name: `${targetUser.displayName} (${onlyBLines.length})`,
                     value: onlyBLines.join('\n') || '\u200b',
                     inline: true,
                 },
             );
-        }
-
-        const commonLines = resolve(commonCodes).map(formatLine);
-        if (commonLines.length > 0) {
-            embed.addFields({ name: 'In Common', value: commonLines.join('\n'), inline: false });
         }
 
         await interaction.editReply({ embeds: [embed] });
