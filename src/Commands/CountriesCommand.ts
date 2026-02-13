@@ -473,11 +473,11 @@ export default class CountriesCommand extends SlashCommand {
         ];
         if (onlyACodes.length > 0)
             summaryLines.push(
-                `${userAMention} has visited ${onlyACodes.length} country${onlyACodes.length === 1 ? '' : 'ies'} that ${userBMention} hasn't been to.`,
+                `${userAMention} has visited ${onlyACodes.length} countr${onlyACodes.length === 1 ? 'y' : 'ies'} that ${userBMention} hasn't been to.`,
             );
         if (onlyBCodes.length > 0)
             summaryLines.push(
-                `${userBMention} has visited ${onlyBCodes.length} country${onlyBCodes.length === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`,
+                `${userBMention} has visited ${onlyBCodes.length} countr${onlyBCodes.length === 1 ? 'y' : 'ies'} that ${userAMention} hasn't been to.`,
             );
 
         summaryLines.push(

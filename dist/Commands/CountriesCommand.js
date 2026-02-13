@@ -331,9 +331,9 @@ export default class CountriesCommand extends SlashCommand {
             `${userAMention} and ${userBMention} have **${commonCodes.length}** countries in common.`,
         ];
         if (onlyACodes.length > 0)
-            summaryLines.push(`${userAMention} has visited ${onlyACodes.length} country${onlyACodes.length === 1 ? '' : 'ies'} that ${userBMention} hasn't been to.`);
+            summaryLines.push(`${userAMention} has visited ${onlyACodes.length} countr${onlyACodes.length === 1 ? 'y' : 'ies'} that ${userBMention} hasn't been to.`);
         if (onlyBCodes.length > 0)
-            summaryLines.push(`${userBMention} has visited ${onlyBCodes.length} country${onlyBCodes.length === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`);
+            summaryLines.push(`${userBMention} has visited ${onlyBCodes.length} countr${onlyBCodes.length === 1 ? 'y' : 'ies'} that ${userAMention} hasn't been to.`);
         summaryLines.push(`In total they have visited ${userACodes.size + userBCodes.size - commonCodes.length} unique countries.`);
         const embed = new EmbedBuilder()
             .setTitle('Country Comparison')
