@@ -313,53 +313,49 @@ export default class CountriesCommand extends SlashCommand {
         ]);
         const userACodes = new Set(userACountries.map((c) => c.countryCode));
         const userBCodes = new Set(userBCountries.map((c) => c.countryCode));
-        const allCodes = new Set([...userACodes, ...userBCodes]);
-        if (allCodes.size === 0) {
+        const commonCodes = [...userACodes].filter((code) => userBCodes.has(code));
+        const onlyACodes = [...userACodes].filter((code) => !userBCodes.has(code));
+        const onlyBCodes = [...userBCodes].filter((code) => !userACodes.has(code));
+        if (userACodes.size === 0 && userBCodes.size === 0) {
             await interaction.editReply('Neither of you have added any countries yet!');
             return;
         }
-        const comparison = [...allCodes].map((code) => ({
-            country: countryService.resolveCountry(code),
-            code,
-            userA: userACodes.has(code),
-            userB: userBCodes.has(code),
-        }));
-        comparison.sort((a, b) => {
-            const aScore = a.userA && a.userB ? 0 : a.userA ? 1 : 2;
-            const bScore = b.userA && b.userB ? 0 : b.userA ? 1 : 2;
-            if (aScore !== bScore)
-                return aScore - bScore;
-            const aName = a.country?.name ?? a.code;
-            const bName = b.country?.name ?? b.code;
-            return aName.localeCompare(bName);
-        });
-        const format = (entry, isUserA) => {
-            const visited = isUserA ? entry.userA : entry.userB;
-            const name = entry.country?.name ?? entry.code;
-            const emoji = entry.country?.emoji ?? '🏳️';
-            return visited ? `${emoji} **${name}**` : `❌ ~~${name}~~`;
-        };
-        const columnA = comparison.map((e) => format(e, true)).join('\n');
-        const columnB = comparison.map((e) => format(e, false)).join('\n');
-        const bothCount = comparison.filter((e) => e.userA && e.userB).length;
-        const onlyACount = comparison.filter((e) => e.userA && !e.userB).length;
-        const onlyBCount = comparison.filter((e) => !e.userA && e.userB).length;
+        const resolve = (codes) => codes
+            .map((code) => countryService.resolveCountry(code))
+            .filter((c) => c !== null)
+            .sort((a, b) => a.name.localeCompare(b.name));
+        const formatLine = (c) => `${c.emoji} ${c.name}`;
         const userAMention = `<@${interaction.user.id}>`;
         const userBMention = `<@${targetUser.id}>`;
         const summaryLines = [
-            `${userAMention} and ${userBMention} have ${bothCount} countries in common`,
+            `${userAMention} and ${userBMention} have **${commonCodes.length}** countries in common.`,
         ];
-        if (onlyACount > 0) {
-            summaryLines.push(`${userAMention} has visited ${onlyACount} country${onlyACount === 1 ? '' : 'ies'} that ${userBMention} hasn't been to.`);
-        }
-        if (onlyBCount > 0) {
-            summaryLines.push(`${userBMention} has visited ${onlyBCount} country${onlyBCount === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`);
-        }
+        if (onlyACodes.length > 0)
+            summaryLines.push(`${userAMention} has visited ${onlyACodes.length} country${onlyACodes.length === 1 ? '' : 'ies'} that ${userBMention} hasn't been to.`);
+        if (onlyBCodes.length > 0)
+            summaryLines.push(`${userBMention} has visited ${onlyBCodes.length} country${onlyBCodes.length === 1 ? '' : 'ies'} that ${userAMention} hasn't been to.`);
         const embed = new EmbedBuilder()
             .setTitle('Country Comparison')
             .setDescription(summaryLines.join('\n'))
             .setColor(0x2383db)
-            .addFields({ name: interaction.user.displayName, value: columnA, inline: true }, { name: targetUser.displayName, value: columnB, inline: true });
+            .setFooter({ text: `${userACodes.size} vs ${userBCodes.size} countries visited` });
+        const onlyALines = resolve(onlyACodes).map(formatLine);
+        const onlyBLines = resolve(onlyBCodes).map(formatLine);
+        if (onlyALines.length > 0 || onlyBLines.length > 0) {
+            embed.addFields({
+                name: `${interaction.user.displayName}`,
+                value: onlyALines.join('\n') || '\u200b',
+                inline: true,
+            }, {
+                name: `${targetUser.displayName}`,
+                value: onlyBLines.join('\n') || '\u200b',
+                inline: true,
+            });
+        }
+        const commonLines = resolve(commonCodes).map(formatLine);
+        if (commonLines.length > 0) {
+            embed.addFields({ name: 'In Common', value: commonLines.join('\n'), inline: false });
+        }
         await interaction.editReply({ embeds: [embed] });
     }
     async handlePartialMatches(interaction, matches) {
