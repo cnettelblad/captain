@@ -160,7 +160,7 @@ export default class AdminCommand extends SlashCommand {
 
             try {
                 await guild.members.fetch(entry.userId);
-                lines.push(`${lines.length + 1}. <@${entry.userId}> — ${entry.count} meetups`);
+                lines.push(`${lines.length + 1}. <@${entry.userId}> — ${entry.count} members`);
             } catch {
                 continue;
             }
