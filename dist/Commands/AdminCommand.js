@@ -92,7 +92,7 @@ export default class AdminCommand extends SlashCommand {
         await interaction.editReply(`Meetup between ${user1} and ${user2} has been created.`);
     }
     async handleMetLeaderboard(client, interaction) {
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
         const meetupService = new MeetupService(client);
         const leaderboard = await meetupService.getLeaderboard();
         const guild = interaction.guild;

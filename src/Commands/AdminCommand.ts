@@ -143,7 +143,7 @@ export default class AdminCommand extends SlashCommand {
         client: Client,
         interaction: ChatInputCommandInteraction,
     ): Promise<void> {
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
 
         const meetupService = new MeetupService(client);
         const leaderboard = await meetupService.getLeaderboard();
