@@ -2,6 +2,7 @@ import SlashCommand from '#captain/Commands/SlashCommand.js';
 import {
     ChatInputCommandInteraction,
     Client,
+    EmbedBuilder,
     MessageFlags,
     PermissionFlagsBits,
     SlashCommandBuilder,
@@ -49,6 +50,11 @@ export default class AdminCommand extends SlashCommand {
                         .addUserOption((option) =>
                             option.setName('user2').setDescription('Second user').setRequired(true),
                         ),
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand
+                        .setName('leaderboard')
+                        .setDescription('Show the top 10 users by meetup count'),
                 ),
         );
 
@@ -62,6 +68,8 @@ export default class AdminCommand extends SlashCommand {
             await this.handleOldSchoolRun(client, interaction);
         } else if (subcommandGroup === 'met' && subcommand === 'add') {
             await this.handleMetAdd(client, interaction);
+        } else if (subcommandGroup === 'met' && subcommand === 'leaderboard') {
+            await this.handleMetLeaderboard(client, interaction);
         }
     }
 
@@ -129,5 +137,45 @@ export default class AdminCommand extends SlashCommand {
         }
 
         await interaction.editReply(`Meetup between ${user1} and ${user2} has been created.`);
+    }
+
+    private async handleMetLeaderboard(
+        client: Client,
+        interaction: ChatInputCommandInteraction,
+    ): Promise<void> {
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+        const meetupService = new MeetupService(client);
+        const leaderboard = await meetupService.getLeaderboard();
+
+        const guild = interaction.guild;
+        if (!guild) {
+            await interaction.editReply('This command can only be used in a server.');
+            return;
+        }
+
+        const lines: string[] = [];
+        for (const entry of leaderboard) {
+            if (lines.length >= 10) break;
+
+            try {
+                await guild.members.fetch(entry.userId);
+                lines.push(`${lines.length + 1}. <@${entry.userId}> — ${entry.count} meetups`);
+            } catch {
+                continue;
+            }
+        }
+
+        if (lines.length === 0) {
+            await interaction.editReply('No meetups found.');
+            return;
+        }
+
+        const embed = new EmbedBuilder()
+            .setTitle('Meetup Leaderboard')
+            .setDescription(lines.join('\n'))
+            .setColor(0x2383db);
+
+        await interaction.editReply({ embeds: [embed] });
     }
 }

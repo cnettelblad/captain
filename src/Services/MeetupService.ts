@@ -225,6 +225,23 @@ export default class MeetupService {
         });
     }
 
+    public async getLeaderboard(): Promise<{ userId: string; count: number }[]> {
+        const encounters = await prisma.userEncounter.findMany({
+            where: { status: 'confirmed' },
+            select: { userA: true, userB: true },
+        });
+
+        const counts = new Map<string, number>();
+        for (const { userA, userB } of encounters) {
+            counts.set(userA, (counts.get(userA) ?? 0) + 1);
+            counts.set(userB, (counts.get(userB) ?? 0) + 1);
+        }
+
+        return [...counts.entries()]
+            .map(([userId, count]) => ({ userId, count }))
+            .sort((a, b) => b.count - a.count);
+    }
+
     public async getPendingMeetups(
         userId: string,
         outgoing: boolean = true,
