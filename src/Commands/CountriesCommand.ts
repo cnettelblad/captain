@@ -89,6 +89,11 @@ export default class CountriesCommand extends SlashCommand {
                         .setDescription('The user to compare with')
                         .setRequired(true),
                 ),
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('most-visited')
+                .setDescription('Show the top 10 most visited countries'),
         );
 
     public async execute(client: Client, interaction: ChatInputCommandInteraction): Promise<void> {
@@ -104,6 +109,8 @@ export default class CountriesCommand extends SlashCommand {
             await this.handleWho(client, interaction);
         } else if (subcommand === 'compare') {
             await this.handleCompare(interaction);
+        } else if (subcommand === 'most-visited') {
+            await this.handleMostVisited(interaction);
         }
     }
 
@@ -533,6 +540,32 @@ export default class CountriesCommand extends SlashCommand {
                 },
             );
         }
+
+        await interaction.editReply({ embeds: [embed] });
+    }
+
+    private async handleMostVisited(interaction: ChatInputCommandInteraction): Promise<void> {
+        await interaction.deferReply();
+
+        const countryService = new CountryService();
+        const leaderboard = await countryService.getCountryLeaderboard(10);
+
+        if (leaderboard.length === 0) {
+            await interaction.editReply('No countries have been visited yet.');
+            return;
+        }
+
+        const lines = leaderboard.map((entry, i) => {
+            const country = countryService.resolveCountry(entry.countryCode);
+            const emoji = country?.emoji ?? '🏳️';
+            const name = country?.name ?? entry.countryCode;
+            return `${i + 1}. ${emoji} ${name} — ${entry.count}`;
+        });
+
+        const embed = new EmbedBuilder()
+            .setTitle('Most Visited Countries')
+            .setDescription(lines.join('\n'))
+            .setColor(0x2383db);
 
         await interaction.editReply({ embeds: [embed] });
     }

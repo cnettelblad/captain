@@ -44,7 +44,10 @@ export default class CountriesCommand extends SlashCommand {
         .addUserOption((option) => option
         .setName('user')
         .setDescription('The user to compare with')
-        .setRequired(true)));
+        .setRequired(true)))
+        .addSubcommand((subcommand) => subcommand
+        .setName('most-visited')
+        .setDescription('Show the top 10 most visited countries'));
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand();
         if (subcommand === 'add') {
@@ -61,6 +64,9 @@ export default class CountriesCommand extends SlashCommand {
         }
         else if (subcommand === 'compare') {
             await this.handleCompare(interaction);
+        }
+        else if (subcommand === 'most-visited') {
+            await this.handleMostVisited(interaction);
         }
     }
     async handleAdd(client, interaction) {
@@ -379,6 +385,26 @@ export default class CountriesCommand extends SlashCommand {
                 inline: true,
             });
         }
+        await interaction.editReply({ embeds: [embed] });
+    }
+    async handleMostVisited(interaction) {
+        await interaction.deferReply();
+        const countryService = new CountryService();
+        const leaderboard = await countryService.getCountryLeaderboard(10);
+        if (leaderboard.length === 0) {
+            await interaction.editReply('No countries have been visited yet.');
+            return;
+        }
+        const lines = leaderboard.map((entry, i) => {
+            const country = countryService.resolveCountry(entry.countryCode);
+            const emoji = country?.emoji ?? '🏳️';
+            const name = country?.name ?? entry.countryCode;
+            return `${i + 1}. ${emoji} ${name} — ${entry.count}`;
+        });
+        const embed = new EmbedBuilder()
+            .setTitle('Most Visited Countries')
+            .setDescription(lines.join('\n'))
+            .setColor(0x2383db);
         await interaction.editReply({ embeds: [embed] });
     }
     async handlePartialMatches(interaction, matches) {

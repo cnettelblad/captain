@@ -70,6 +70,15 @@ export default class CountryService {
             orderBy: { createdAt: 'asc' },
         });
     }
+    async getCountryLeaderboard(limit) {
+        const results = await prisma.userCountry.groupBy({
+            by: ['countryCode'],
+            _count: { countryCode: true },
+            orderBy: { _count: { countryCode: 'desc' } },
+            take: limit,
+        });
+        return results.map((r) => ({ countryCode: r.countryCode, count: r._count.countryCode }));
+    }
     async getCountryUsers(countryCode) {
         return prisma.userCountry.findMany({
             where: { countryCode },

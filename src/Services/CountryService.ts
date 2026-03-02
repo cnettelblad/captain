@@ -93,6 +93,17 @@ export default class CountryService {
         });
     }
 
+    public async getCountryLeaderboard(limit: number): Promise<{ countryCode: string; count: number }[]> {
+        const results = await prisma.userCountry.groupBy({
+            by: ['countryCode'],
+            _count: { countryCode: true },
+            orderBy: { _count: { countryCode: 'desc' } },
+            take: limit,
+        });
+
+        return results.map((r) => ({ countryCode: r.countryCode, count: r._count.countryCode }));
+    }
+
     public async getCountryUsers(countryCode: string) {
         return prisma.userCountry.findMany({
             where: { countryCode },
