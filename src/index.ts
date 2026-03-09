@@ -1,6 +1,8 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
 import MessageCreate from '#captain/Event/MessageCreate.js';
+import MessageUpdate from '#captain/Event/MessageUpdate.js';
+import MessageDelete from '#captain/Event/MessageDelete.js';
 import CommandDispatcher from '#captain/Dispatcher/CommandDispatcher.js';
 import Event from '#captain/Event/Event.js';
 import Job from '#captain/Jobs/Job.js';
@@ -12,7 +14,12 @@ import SlashCommand from '#captain/Commands/SlashCommand.js';
 config();
 
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent
+    ],
 });
 
 // Load slash commands
@@ -69,7 +76,7 @@ async function initialize() {
     await loadCommands();
     await loadJobs();
 
-    const events: Event<any>[] = [new MessageCreate(client)];
+    const events: Event<any>[] = [new MessageCreate(client), new MessageUpdate(client), new MessageDelete(client)];
 
     events.forEach((event) => {
         client.on(

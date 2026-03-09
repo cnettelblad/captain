@@ -1,6 +1,8 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
 import MessageCreate from './Event/MessageCreate.js';
+import MessageUpdate from './Event/MessageUpdate.js';
+import MessageDelete from './Event/MessageDelete.js';
 import CommandDispatcher from './Dispatcher/CommandDispatcher.js';
 import Job from './Jobs/Job.js';
 import { readdirSync } from 'fs';
@@ -9,7 +11,12 @@ import { fileURLToPath } from 'url';
 import SlashCommand from './Commands/SlashCommand.js';
 config();
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.MessageContent
+    ],
 });
 // Load slash commands
 const commands = [];
@@ -50,7 +57,7 @@ async function loadJobs() {
 async function initialize() {
     await loadCommands();
     await loadJobs();
-    const events = [new MessageCreate(client)];
+    const events = [new MessageCreate(client), new MessageUpdate(client), new MessageDelete(client)];
     events.forEach((event) => {
         client.on(event.constructor.name.charAt(0).toLowerCase() + event.constructor.name.slice(1), (...args) => event.execute(...args));
     });
