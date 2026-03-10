@@ -85,3 +85,14 @@ model MessageEdit {
 
   @@index([messageId])
 }
+
+model Suggestion {
+  id            Int       @id @default(autoincrement())
+  userId        String
+  suggestion    String
+  published     Boolean   @default(false)
+  votesFor      Int       @default(0)
+  votesAgainst  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  deletedAt     DateTime?
+}

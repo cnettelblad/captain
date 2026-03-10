@@ -1,8 +1,9 @@
-import { ChatInputCommandInteraction, Interaction, StringSelectMenuInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, Interaction, ModalSubmitInteraction, StringSelectMenuInteraction } from 'discord.js';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 import MetCommand from '#captain/Commands/MetCommand.js';
 import MeetupCommand from '#captain/Commands/MeetupCommand.js';
 import CountriesCommand from '#captain/Commands/CountriesCommand.js';
+import SuggestionsCommand from '#captain/Commands/SuggestionsCommand.js';
 
 export default class CommandDispatcher {
     private commands: Map<string, SlashCommand> = new Map();
@@ -24,6 +25,10 @@ export default class CommandDispatcher {
 
         if (interaction.isStringSelectMenu()) {
             return this.handleSelectMenu(interaction);
+        }
+
+        if (interaction.isModalSubmit()) {
+            return this.handleModal(interaction);
         }
     }
 
@@ -90,11 +95,38 @@ export default class CommandDispatcher {
                 const countriesCommand = this.commands.get('countries') as CountriesCommand;
                 return countriesCommand.handleButton(interaction);
             }
+
+            if (interaction.customId.startsWith('suggestions_')) {
+                const suggestionsCommand = this.commands.get('suggestions') as SuggestionsCommand;
+                return suggestionsCommand.handleButton(interaction);
+            }
         } catch (error) {
             console.error(`Error handling button interaction:`, error);
 
             const errorMessage = {
                 content: 'There was an error processing your response!',
+                ephemeral: true,
+            };
+
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage);
+            } else {
+                await interaction.reply(errorMessage);
+            }
+        }
+    }
+
+    private async handleModal(interaction: ModalSubmitInteraction): Promise<void> {
+        try {
+            if (interaction.customId.startsWith('suggestions_')) {
+                const suggestionsCommand = this.commands.get('suggestions') as SuggestionsCommand;
+                return suggestionsCommand.handleModal(interaction);
+            }
+        } catch (error) {
+            console.error(`Error handling modal interaction:`, error);
+
+            const errorMessage = {
+                content: 'There was an error processing your submission!',
                 ephemeral: true,
             };
 

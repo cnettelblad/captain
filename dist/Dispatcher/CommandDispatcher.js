@@ -15,6 +15,9 @@ export default class CommandDispatcher {
         if (interaction.isStringSelectMenu()) {
             return this.handleSelectMenu(interaction);
         }
+        if (interaction.isModalSubmit()) {
+            return this.handleModal(interaction);
+        }
     }
     async handleCommand(interaction) {
         const command = this.commands.get(interaction.commandName);
@@ -74,11 +77,36 @@ export default class CommandDispatcher {
                 const countriesCommand = this.commands.get('countries');
                 return countriesCommand.handleButton(interaction);
             }
+            if (interaction.customId.startsWith('suggestions_')) {
+                const suggestionsCommand = this.commands.get('suggestions');
+                return suggestionsCommand.handleButton(interaction);
+            }
         }
         catch (error) {
             console.error(`Error handling button interaction:`, error);
             const errorMessage = {
                 content: 'There was an error processing your response!',
+                ephemeral: true,
+            };
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp(errorMessage);
+            }
+            else {
+                await interaction.reply(errorMessage);
+            }
+        }
+    }
+    async handleModal(interaction) {
+        try {
+            if (interaction.customId.startsWith('suggestions_')) {
+                const suggestionsCommand = this.commands.get('suggestions');
+                return suggestionsCommand.handleModal(interaction);
+            }
+        }
+        catch (error) {
+            console.error(`Error handling modal interaction:`, error);
+            const errorMessage = {
+                content: 'There was an error processing your submission!',
                 ephemeral: true,
             };
             if (interaction.replied || interaction.deferred) {
