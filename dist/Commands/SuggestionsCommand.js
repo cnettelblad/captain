@@ -105,7 +105,7 @@ export default class SuggestionsCommand extends SlashCommand {
             .setRequired(true);
         const label = new LabelBuilder()
             .setLabel('Feedback & Ideas')
-            .setDescription('Share your thoughts on how we can improve Wanderlust! Your suggestions help us create a better experience for everyone.')
+            .setDescription('Share your thoughts on how we can improve Wanderlust!')
             .setTextInputComponent(input);
         modal
             .addTextDisplayComponents(infoText)
