@@ -17,6 +17,8 @@ import {
     TextChannel,
     TextInputBuilder,
     TextInputStyle,
+    LabelBuilder,
+    TextDisplayBuilder,
 } from 'discord.js';
 
 export default class SuggestionsCommand extends SlashCommand {
@@ -85,12 +87,13 @@ export default class SuggestionsCommand extends SlashCommand {
             .setDescription(
                 'Got an idea that could improve **Wanderlust**?\n\n' +
                 'We\'d love to hear it! Your suggestions help us make the server better for everyone.\n\n' +
-                'All suggestions will be reviewed by the staff team and may be put up for a community vote.\n\n' +
-                'Click the button below to submit your idea.'
+                '📩 **Click the button below to submit your idea**.'
             )
             .setFooter({
                 text: 'Wanderlust • Community Feedback',
+                iconURL: 'https://cdn.discordapp.com/icons/583718278468206612/8da571af17099658cbe95519cfea6934.webp?size=64',
             })
+            .setThumbnail('https://i.imgur.com/FjO3Ng5.png')
             .setColor(0x5865f2);
 
         const button = new ButtonBuilder()
@@ -142,16 +145,23 @@ export default class SuggestionsCommand extends SlashCommand {
             .setCustomId('suggestions_modal')
             .setTitle('Submit a Suggestion');
 
+        const infoText = new TextDisplayBuilder()
+            .setContent('This form is for feedback and ideas to improve **Wanderlust**, for ban appeals or issues with other members, please contact staff directly.');
+
         const input = new TextInputBuilder()
             .setCustomId('suggestions_input')
-            .setLabel('Your suggestion')
             .setPlaceholder('Describe your idea...')
             .setStyle(TextInputStyle.Paragraph)
-            .setRequired(true)
-            .setMaxLength(1024);
+            .setRequired(true);
 
-        const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
-        modal.addComponents(row);
+        const label = new LabelBuilder()
+            .setLabel('Feedback & Ideas')
+            .setDescription('Share your thoughts on how we can improve Wanderlust! Your suggestions help us create a better experience for everyone.')
+            .setTextInputComponent(input);
+
+        modal
+            .addTextDisplayComponents(infoText)
+            .addLabelComponents(label);
 
         await interaction.showModal(modal);
     }
