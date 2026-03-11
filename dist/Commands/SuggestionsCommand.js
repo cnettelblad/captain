@@ -47,8 +47,14 @@ export default class SuggestionsCommand extends SlashCommand {
             return;
         }
         const embed = new EmbedBuilder()
-            .setTitle('Suggestions')
-            .setDescription('Do you have an idea that you think could improve Wanderlust? Submit it here!')
+            .setTitle('💡 Wanderlust - Feedback & Ideas')
+            .setDescription('Got an idea that could improve **Wanderlust**?\n\n' +
+            'We\'d love to hear it! Your suggestions help us make the server better for everyone.\n\n' +
+            'All suggestions will be reviewed by the staff team and may be put up for a community vote.\n\n' +
+            'Click the button below to submit your idea.')
+            .setFooter({
+            text: 'Wanderlust • Community Feedback',
+        })
             .setColor(0x5865f2);
         const button = new ButtonBuilder()
             .setCustomId('suggestions_submit')
