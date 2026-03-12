@@ -1,6 +1,7 @@
 import SlashCommand from '../Commands/SlashCommand.js';
 import SuggestionService from '../Services/SuggestionService.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, PermissionFlagsBits, SlashCommandBuilder, TextInputBuilder, TextInputStyle, FileUploadBuilder, LabelBuilder, TextDisplayBuilder, } from 'discord.js';
+const SUGGESTIONS_LOG_CHANNEL = '1481647283513593918';
 export default class SuggestionsCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('suggestions')
@@ -133,6 +134,27 @@ export default class SuggestionsCommand extends SlashCommand {
             }))
             : [];
         await this.suggestionService.create(interaction.user.id, suggestion, attachments);
+        const logChannel = await interaction.client.channels.fetch(SUGGESTIONS_LOG_CHANNEL);
+        if (logChannel?.isTextBased()) {
+            const embed = new EmbedBuilder()
+                .setAuthor({
+                name: interaction.user.displayName,
+                iconURL: interaction.user.displayAvatarURL(),
+            })
+                .setDescription(suggestion)
+                .setColor(0x5865f2)
+                .setTimestamp();
+            if (attachments.length > 0) {
+                embed.setImage(attachments[0].url);
+            }
+            if (attachments.length > 1) {
+                embed.addFields({
+                    name: 'Additional Attachments',
+                    value: attachments.slice(1).map((a) => `[${a.filename}](${a.url})`).join('\n'),
+                });
+            }
+            await logChannel.send({ embeds: [embed] });
+        }
         await interaction.reply({
             content: 'Your suggestion has been submitted. Thank you!',
             flags: MessageFlags.Ephemeral,
