@@ -17,6 +17,7 @@ import {
     TextChannel,
     TextInputBuilder,
     TextInputStyle,
+    FileUploadBuilder,
     LabelBuilder,
     TextDisplayBuilder,
 } from 'discord.js';
@@ -159,17 +160,37 @@ export default class SuggestionsCommand extends SlashCommand {
             .setDescription('Share your thoughts on how we can improve Wanderlust!')
             .setTextInputComponent(input);
 
+        const fileUpload = new FileUploadBuilder()
+            .setCustomId('suggestions_attachments')
+            .setRequired(false);
+
+        const attachmentLabel = new LabelBuilder()
+            .setLabel('Attachments')
+            .setDescription('Optionally attach images or files to your suggestion.')
+            .setFileUploadComponent(fileUpload);
+
         modal
             .addTextDisplayComponents(infoText)
-            .addLabelComponents(label);
+            .addLabelComponents(label)
+            .addLabelComponents(attachmentLabel);
 
         await interaction.showModal(modal);
     }
 
     public async handleModal(interaction: ModalSubmitInteraction): Promise<void> {
         const suggestion = interaction.fields.getTextInputValue('suggestions_input');
+        const uploadedFiles = interaction.fields.getUploadedFiles('suggestions_attachments');
 
-        await this.suggestionService.create(interaction.user.id, suggestion);
+        const attachments = uploadedFiles
+            ? [...uploadedFiles.values()].map((file) => ({
+                url: file.url,
+                filename: file.name,
+                contentType: file.contentType,
+                size: file.size,
+            }))
+            : [];
+
+        await this.suggestionService.create(interaction.user.id, suggestion, attachments);
 
         await interaction.reply({
             content: 'Your suggestion has been submitted. Thank you!',

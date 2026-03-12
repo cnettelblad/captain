@@ -1,8 +1,14 @@
 import { prisma } from '../Services/Prisma.js';
 export default class SuggestionService {
-    async create(userId, suggestion) {
+    async create(userId, suggestion, attachments = []) {
         return prisma.suggestion.create({
-            data: { userId, suggestion },
+            data: {
+                userId,
+                suggestion,
+                attachments: attachments.length > 0 ? {
+                    create: attachments,
+                } : undefined,
+            },
         });
     }
     async list(page = 1, pageSize = 10) {

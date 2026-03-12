@@ -1,9 +1,15 @@
 import { prisma } from '#captain/Services/Prisma.js';
 
 export default class SuggestionService {
-    public async create(userId: string, suggestion: string) {
+    public async create(userId: string, suggestion: string, attachments: { url: string; filename: string; contentType: string | null; size: number | null }[] = []) {
         return prisma.suggestion.create({
-            data: { userId, suggestion },
+            data: {
+                userId,
+                suggestion,
+                attachments: attachments.length > 0 ? {
+                    create: attachments,
+                } : undefined,
+            },
         });
     }
 

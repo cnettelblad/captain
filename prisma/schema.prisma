@@ -87,12 +87,27 @@ model MessageEdit {
 }
 
 model Suggestion {
-  id            Int       @id @default(autoincrement())
+  id            Int                    @id @default(autoincrement())
   userId        String
   suggestion    String
-  published     Boolean   @default(false)
-  votesFor      Int       @default(0)
-  votesAgainst  Int       @default(0)
-  createdAt     DateTime  @default(now())
+  published     Boolean                @default(false)
+  votesFor      Int                    @default(0)
+  votesAgainst  Int                    @default(0)
+  createdAt     DateTime               @default(now())
   deletedAt     DateTime?
+  attachments   SuggestionAttachment[]
+}
+
+model SuggestionAttachment {
+  id           Int        @id @default(autoincrement())
+  suggestionId Int
+  url          String
+  filename     String
+  contentType  String?
+  size         Int?
+  createdAt    DateTime   @default(now())
+
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id])
+
+  @@index([suggestionId])
 }

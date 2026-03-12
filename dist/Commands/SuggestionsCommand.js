@@ -1,6 +1,6 @@
 import SlashCommand from '../Commands/SlashCommand.js';
 import SuggestionService from '../Services/SuggestionService.js';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, PermissionFlagsBits, SlashCommandBuilder, TextInputBuilder, TextInputStyle, LabelBuilder, TextDisplayBuilder, } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlags, ModalBuilder, PermissionFlagsBits, SlashCommandBuilder, TextInputBuilder, TextInputStyle, FileUploadBuilder, LabelBuilder, TextDisplayBuilder, } from 'discord.js';
 export default class SuggestionsCommand extends SlashCommand {
     data = new SlashCommandBuilder()
         .setName('suggestions')
@@ -107,14 +107,31 @@ export default class SuggestionsCommand extends SlashCommand {
             .setLabel('Feedback & Ideas')
             .setDescription('Share your thoughts on how we can improve Wanderlust!')
             .setTextInputComponent(input);
+        const fileUpload = new FileUploadBuilder()
+            .setCustomId('suggestions_attachments')
+            .setRequired(false);
+        const attachmentLabel = new LabelBuilder()
+            .setLabel('Attachments')
+            .setDescription('Optionally attach images or files to your suggestion.')
+            .setFileUploadComponent(fileUpload);
         modal
             .addTextDisplayComponents(infoText)
-            .addLabelComponents(label);
+            .addLabelComponents(label)
+            .addLabelComponents(attachmentLabel);
         await interaction.showModal(modal);
     }
     async handleModal(interaction) {
         const suggestion = interaction.fields.getTextInputValue('suggestions_input');
-        await this.suggestionService.create(interaction.user.id, suggestion);
+        const uploadedFiles = interaction.fields.getUploadedFiles('suggestions_attachments');
+        const attachments = uploadedFiles
+            ? [...uploadedFiles.values()].map((file) => ({
+                url: file.url,
+                filename: file.name,
+                contentType: file.contentType,
+                size: file.size,
+            }))
+            : [];
+        await this.suggestionService.create(interaction.user.id, suggestion, attachments);
         await interaction.reply({
             content: 'Your suggestion has been submitted. Thank you!',
             flags: MessageFlags.Ephemeral,
