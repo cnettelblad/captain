@@ -20,6 +20,7 @@ import {
     FileUploadBuilder,
     LabelBuilder,
     TextDisplayBuilder,
+    AttachmentBuilder,
 } from 'discord.js';
 
 const SUGGESTIONS_LOG_CHANNEL = '1481647283513593918';
@@ -207,18 +208,7 @@ export default class SuggestionsCommand extends SlashCommand {
                 .setColor(0x5865f2)
                 .setTimestamp();
 
-            if (attachments.length > 0) {
-                embed.setImage(attachments[0].url);
-            }
-
-            if (attachments.length > 1) {
-                embed.addFields({
-                    name: 'Additional Attachments',
-                    value: attachments.slice(1).map((a) => `[${a.filename}](${a.url})`).join('\n'),
-                });
-            }
-
-            await (logChannel as TextChannel).send({ embeds: [embed] });
+            await (logChannel as TextChannel).send({ embeds: [embed], files: uploadedFiles ? [...uploadedFiles.values()] : [] });
         }
 
         await interaction.reply({

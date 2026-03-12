@@ -144,16 +144,7 @@ export default class SuggestionsCommand extends SlashCommand {
                 .setDescription(suggestion)
                 .setColor(0x5865f2)
                 .setTimestamp();
-            if (attachments.length > 0) {
-                embed.setImage(attachments[0].url);
-            }
-            if (attachments.length > 1) {
-                embed.addFields({
-                    name: 'Additional Attachments',
-                    value: attachments.slice(1).map((a) => `[${a.filename}](${a.url})`).join('\n'),
-                });
-            }
-            await logChannel.send({ embeds: [embed] });
+            await logChannel.send({ embeds: [embed], files: uploadedFiles ? [...uploadedFiles.values()] : [] });
         }
         await interaction.reply({
             content: 'Your suggestion has been submitted. Thank you!',
