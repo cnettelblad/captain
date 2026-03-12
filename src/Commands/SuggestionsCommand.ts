@@ -162,6 +162,7 @@ export default class SuggestionsCommand extends SlashCommand {
 
         const fileUpload = new FileUploadBuilder()
             .setCustomId('suggestions_attachments')
+            .setMaxValues(5)
             .setRequired(false);
 
         const attachmentLabel = new LabelBuilder()

@@ -109,6 +109,7 @@ export default class SuggestionsCommand extends SlashCommand {
             .setTextInputComponent(input);
         const fileUpload = new FileUploadBuilder()
             .setCustomId('suggestions_attachments')
+            .setMaxValues(5)
             .setRequired(false);
         const attachmentLabel = new LabelBuilder()
             .setLabel('Attachments')
