@@ -40,7 +40,7 @@ export default class OldSchoolJob extends Job {
                 if (!joinedAt) {
                     continue;
                 }
-                const isOldEnough = joinedAt < cutoffTimestamp;
+                const isOldEnough = joinedAt <= cutoffTimestamp;
                 if (hasQualifyingRole && isOldEnough && !hasOldSchoolRole) {
                     toAddRole.push(member);
                 }
