@@ -1,5 +1,5 @@
 import SlashCommand from '../Commands/SlashCommand.js';
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder, } from 'discord.js';
+import { EmbedBuilder, GuildMember, MessageFlags, SlashCommandBuilder, } from 'discord.js';
 import GoogleSheetsClient from '../Integrations/GoogleSheets.js';
 import GlobetrotterSummary from '../Globetrotter/2026/Summary.js';
 import { CATEGORY_EMOJI, MEDAL_EMOJI, REPEATABLE_DISPLAY, } from '../Globetrotter/2026/Labels.js';
@@ -21,7 +21,7 @@ export default class GlobetrotterCommand extends SlashCommand {
             });
             return;
         }
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
         const sheets = new GoogleSheetsClient(apiKey);
         const service = new GlobetrotterSummary(sheets, spreadsheetId);
         let summary;
@@ -34,13 +34,15 @@ export default class GlobetrotterCommand extends SlashCommand {
             return;
         }
         if (!summary) {
-            await interaction.editReply("You're not registered in the Globetrotter sheet — ask an admin to add your Discord ID.");
+            await interaction.editReply(`<@${interaction.user.id}> isn't registered in the Globetrotter sheet — ask an admin to add their Discord ID.`);
             return;
         }
-        await interaction.deleteReply();
-        await interaction.followUp({ embeds: [this.buildEmbed(summary)] });
+        const displayName = interaction.member instanceof GuildMember
+            ? interaction.member.displayName
+            : interaction.user.displayName;
+        await interaction.editReply({ embeds: [this.buildEmbed(summary, displayName)] });
     }
-    buildEmbed(summary) {
+    buildEmbed(summary, displayName) {
         const medal = MEDAL_EMOJI[summary.rank];
         const titleSuffix = medal ? ` ${medal}` : '';
         const description = `${summary.username} has completed **${summary.nonRecurringCompleted}** out of the ` +
@@ -61,7 +63,7 @@ export default class GlobetrotterCommand extends SlashCommand {
             .map((c) => `${CATEGORY_EMOJI[c.letter]} **${c.name}:** ${c.completed}/${c.total}`)
             .join('\n');
         return new EmbedBuilder()
-            .setTitle(`${summary.username}'s Globetrotter Stats${titleSuffix}`)
+            .setTitle(`${displayName}'s Globetrotter 2026 Stats${titleSuffix}`)
             .setDescription(description)
             .setColor(0x2383db)
             .addFields({ name: 'Recurring Submissions', value: overviewValue, inline: true }, { name: 'Submissions by Category', value: categoryValue, inline: true });

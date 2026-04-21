@@ -3,6 +3,7 @@ import {
     ChatInputCommandInteraction,
     Client,
     EmbedBuilder,
+    GuildMember,
     MessageFlags,
     SlashCommandBuilder,
 } from 'discord.js';
@@ -38,7 +39,7 @@ export default class GlobetrotterCommand extends SlashCommand {
             return;
         }
 
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply();
 
         const sheets = new GoogleSheetsClient(apiKey);
         const service = new GlobetrotterSummary(sheets, spreadsheetId);
@@ -54,16 +55,20 @@ export default class GlobetrotterCommand extends SlashCommand {
 
         if (!summary) {
             await interaction.editReply(
-                "You're not registered in the Globetrotter sheet — ask an admin to add your Discord ID.",
+                `<@${interaction.user.id}> isn't registered in the Globetrotter sheet — ask an admin to add their Discord ID.`,
             );
             return;
         }
 
-        await interaction.deleteReply();
-        await interaction.followUp({ embeds: [this.buildEmbed(summary)] });
+        const displayName =
+            interaction.member instanceof GuildMember
+                ? interaction.member.displayName
+                : interaction.user.displayName;
+
+        await interaction.editReply({ embeds: [this.buildEmbed(summary, displayName)] });
     }
 
-    private buildEmbed(summary: UserSummary): EmbedBuilder {
+    private buildEmbed(summary: UserSummary, displayName: string): EmbedBuilder {
         const medal = MEDAL_EMOJI[summary.rank];
         const titleSuffix = medal ? ` ${medal}` : '';
 
@@ -90,7 +95,7 @@ export default class GlobetrotterCommand extends SlashCommand {
             .join('\n');
 
         return new EmbedBuilder()
-            .setTitle(`${summary.username}'s Globetrotter Stats${titleSuffix}`)
+            .setTitle(`${displayName}'s Globetrotter 2026 Stats${titleSuffix}`)
             .setDescription(description)
             .setColor(0x2383db)
             .addFields(
