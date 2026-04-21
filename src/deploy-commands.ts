@@ -2,7 +2,7 @@ import { REST, Routes } from 'discord.js';
 import dotenv from 'dotenv';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 
 dotenv.config();
@@ -37,7 +37,7 @@ async function deployCommands() {
         const filePath = join(commandsPath, commandFile);
 
         try {
-            const commandModule = await import(filePath);
+            const commandModule = await import(pathToFileURL(filePath).href);
             const CommandClass = commandModule.default;
 
             if (!CommandClass || !(CommandClass.prototype instanceof SlashCommand)) {
@@ -83,7 +83,7 @@ async function deployCommands() {
 
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
-        const commandModule = await import(filePath);
+        const commandModule = await import(pathToFileURL(filePath).href);
         const CommandClass = commandModule.default;
 
         if (CommandClass && CommandClass.prototype instanceof SlashCommand) {

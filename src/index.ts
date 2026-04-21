@@ -8,7 +8,7 @@ import Event from '#captain/Event/Event.js';
 import Job from '#captain/Jobs/Job.js';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import SlashCommand from '#captain/Commands/SlashCommand.js';
 
 config();
@@ -36,7 +36,7 @@ async function loadCommands() {
 
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
-        const commandModule = await import(filePath);
+        const commandModule = await import(pathToFileURL(filePath).href);
         const CommandClass = commandModule.default;
 
         if (CommandClass && CommandClass.prototype instanceof SlashCommand) {
@@ -61,7 +61,7 @@ async function loadJobs() {
 
     for (const file of jobFiles) {
         const filePath = join(jobsPath, file);
-        const jobModule = await import(filePath);
+        const jobModule = await import(pathToFileURL(filePath).href);
         const JobClass = jobModule.default;
 
         if (JobClass && JobClass.prototype instanceof Job) {

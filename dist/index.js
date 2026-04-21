@@ -7,7 +7,7 @@ import CommandDispatcher from './Dispatcher/CommandDispatcher.js';
 import Job from './Jobs/Job.js';
 import { readdirSync } from 'fs';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import SlashCommand from './Commands/SlashCommand.js';
 config();
 const client = new Client({
@@ -27,7 +27,7 @@ async function loadCommands() {
         file !== 'SlashCommand.js');
     for (const file of commandFiles) {
         const filePath = join(commandsPath, file);
-        const commandModule = await import(filePath);
+        const commandModule = await import(pathToFileURL(filePath).href);
         const CommandClass = commandModule.default;
         if (CommandClass && CommandClass.prototype instanceof SlashCommand) {
             const commandInstance = new CommandClass();
@@ -45,7 +45,7 @@ async function loadJobs() {
         file !== 'Job.js');
     for (const file of jobFiles) {
         const filePath = join(jobsPath, file);
-        const jobModule = await import(filePath);
+        const jobModule = await import(pathToFileURL(filePath).href);
         const JobClass = jobModule.default;
         if (JobClass && JobClass.prototype instanceof Job) {
             const jobInstance = new JobClass(client);
