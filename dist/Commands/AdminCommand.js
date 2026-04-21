@@ -29,6 +29,11 @@ export default class AdminCommand extends SlashCommand {
         .addUserOption((option) => option.setName('user1').setDescription('First user').setRequired(true))
         .addUserOption((option) => option.setName('user2').setDescription('Second user').setRequired(true)))
         .addSubcommand((subcommand) => subcommand
+        .setName('remove')
+        .setDescription('Remove a confirmed meetup between two users')
+        .addUserOption((option) => option.setName('user1').setDescription('First user').setRequired(true))
+        .addUserOption((option) => option.setName('user2').setDescription('Second user').setRequired(true)))
+        .addSubcommand((subcommand) => subcommand
         .setName('leaderboard')
         .setDescription('Show the top 10 users by meetup count')));
     async execute(client, interaction) {
@@ -42,6 +47,9 @@ export default class AdminCommand extends SlashCommand {
         }
         else if (subcommandGroup === 'met' && subcommand === 'add') {
             await this.handleMetAdd(client, interaction);
+        }
+        else if (subcommandGroup === 'met' && subcommand === 'remove') {
+            await this.handleMetRemove(client, interaction);
         }
         else if (subcommandGroup === 'met' && subcommand === 'leaderboard') {
             await this.handleMetLeaderboard(client, interaction);
@@ -90,6 +98,19 @@ export default class AdminCommand extends SlashCommand {
             await meetupService.createConfirmedEncounter(user1.id, user2.id, interaction.user.id);
         }
         await interaction.editReply(`Meetup between ${user1} and ${user2} has been created.`);
+    }
+    async handleMetRemove(client, interaction) {
+        const user1 = interaction.options.getUser('user1', true);
+        const user2 = interaction.options.getUser('user2', true);
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        const meetupService = new MeetupService(client);
+        const existingEncounter = await meetupService.findEncounter(user1.id, user2.id);
+        if (!existingEncounter) {
+            await interaction.editReply(`No encounter between the two users exists`);
+            return;
+        }
+        await meetupService.destroyEncounter(existingEncounter);
+        await interaction.editReply(`Meetup between ${user1} and ${user2} has been removed.`);
     }
     async handleMetLeaderboard(client, interaction) {
         await interaction.deferReply();

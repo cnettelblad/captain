@@ -90,6 +90,14 @@ export default class MeetupService {
         });
     }
     /**
+     * Permanently deletes an encounter.
+     */
+    async destroyEncounter(encounter) {
+        await prisma.userEncounter.delete({
+            where: { id: encounter.id },
+        });
+    }
+    /**
      * Updates a rejected encounter to pending (for re-requests after cooldown).
      */
     async updateToPending(encounter, createdBy) {
