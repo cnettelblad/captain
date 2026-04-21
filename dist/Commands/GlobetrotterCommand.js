@@ -45,7 +45,7 @@ export default class GlobetrotterCommand extends SlashCommand {
     buildEmbed(summary, displayName) {
         const medal = MEDAL_EMOJI[summary.rank];
         const titleSuffix = medal ? ` ${medal}` : '';
-        const description = `${summary.username} has completed **${summary.nonRecurringCompleted}** out of the ` +
+        const description = `${displayName} has completed **${summary.nonRecurringCompleted}** out of the ` +
             `**${summary.nonRecurringTotal}** non-recurring challenges and made ` +
             `**${summary.recurringSubmissions}** recurring ` +
             `${plural(summary.recurringSubmissions, 'submission')}, yielding ` +

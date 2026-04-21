@@ -73,7 +73,7 @@ export default class GlobetrotterCommand extends SlashCommand {
         const titleSuffix = medal ? ` ${medal}` : '';
 
         const description =
-            `${summary.username} has completed **${summary.nonRecurringCompleted}** out of the ` +
+            `${displayName} has completed **${summary.nonRecurringCompleted}** out of the ` +
             `**${summary.nonRecurringTotal}** non-recurring challenges and made ` +
             `**${summary.recurringSubmissions}** recurring ` +
             `${plural(summary.recurringSubmissions, 'submission')}, yielding ` +
