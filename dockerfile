@@ -6,6 +6,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --only=production
 
 COPY ./dist ./dist
+COPY ./docs ./docs
 COPY ./prisma ./prisma
 COPY ./prisma.config.ts ./prisma.config.ts
 
