@@ -4,6 +4,7 @@ import {
     Client,
     EmbedBuilder,
     MessageFlags,
+    PermissionFlagsBits,
     SlashCommandBuilder,
 } from 'discord.js';
 import { readdirSync, readFileSync } from 'fs';
@@ -13,6 +14,12 @@ import { join } from 'path';
 const DOCS_PATH = fileURLToPath(new URL('../../docs/commands', import.meta.url));
 const HELP_FILE = 'HelpCommand.md';
 const EMBED_DESCRIPTION_CAP = 4096;
+
+const MOD_COMMANDS: { name: string; description: string }[] = [
+    { name: 'free', description: 'Free a user from the tank 🐠' },
+    { name: 'tank', description: 'Send a user to the tank 🐟' },
+];
+const MOD_COMMAND_NAMES = new Set(MOD_COMMANDS.map((c) => c.name));
 
 function commandNameFromFile(filename: string): string | null {
     const match = filename.match(/^(.+)Command\.md$/);
@@ -57,6 +64,17 @@ export default class HelpCommand extends SlashCommand {
 
         const requested = rawCommand?.trim().toLowerCase().replace(/^\//, '') ?? '';
 
+        const hasMod =
+            interaction.memberPermissions?.has(PermissionFlagsBits.ModerateMembers) ?? false;
+
+        if (requested && MOD_COMMAND_NAMES.has(requested) && !hasMod) {
+            await interaction.reply({
+                content: `You need the **Moderate Members** permission to view help for \`/${requested}\`.`,
+                flags: MessageFlags.Ephemeral,
+            });
+            return;
+        }
+
         let docFile = HELP_FILE;
         let errorPrefix = '';
 
@@ -69,9 +87,9 @@ export default class HelpCommand extends SlashCommand {
             }
         }
 
-        let docContent: string;
+        let body: string;
         try {
-            docContent = readFileSync(join(DOCS_PATH, docFile), 'utf8');
+            body = readFileSync(join(DOCS_PATH, docFile), 'utf8');
         } catch (err) {
             console.error('[HelpCommand] Failed to read doc:', err);
             await interaction.reply({
@@ -81,14 +99,20 @@ export default class HelpCommand extends SlashCommand {
             return;
         }
 
-        if (docContent.length > EMBED_DESCRIPTION_CAP) {
-            docContent = docContent.slice(0, EMBED_DESCRIPTION_CAP - 3) + '...';
+        if (docFile === HELP_FILE && hasMod) {
+            body +=
+                '\n\n## 🛡️ Mod Commands\n\n' +
+                MOD_COMMANDS.map((c) => `- \`/${c.name}\` — ${c.description}`).join('\n');
+        }
+
+        if (body.length > EMBED_DESCRIPTION_CAP) {
+            body = body.slice(0, EMBED_DESCRIPTION_CAP - 3) + '...';
         }
 
         const pingPart = user ? `<@${user.id}>` : '';
         const content = [pingPart, errorPrefix].filter(Boolean).join(' ') || undefined;
 
-        const embed = new EmbedBuilder().setDescription(docContent).setColor(0x2383db);
+        const embed = new EmbedBuilder().setDescription(body).setColor(0x2383db);
 
         await interaction.reply({
             content,

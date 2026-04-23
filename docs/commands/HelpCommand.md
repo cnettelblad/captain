@@ -1,4 +1,4 @@
-# 🆘 Help
+# Help
 
 I've got commands for travel tracking, meetups, music stats, birthdays, and more. Use `/help` with any command name to get the details.
 
@@ -13,16 +13,14 @@ I've got commands for travel tracking, meetups, music stats, birthdays, and more
 
 Leave `command` empty to see this overview. Tag a `user` to **ping them** in the response — useful for pointing a friend to the right command.
 
-## 🧭 Public Commands
+## 🧭 Commands
 
 - `/birthday` — Set or remove your birthday 🎂
 - `/countries` — Track countries you've visited 🌍
 - `/fm` — Last.fm music stats 🎵
-- `/free` — Free a user from the tank (mod) 🐠
 - `/globetrotter` — Your Globetrotter challenge stats 🌐
 - `/help` — This command 🆘
 - `/meetup` — View your meetup list 👥
 - `/met` — Log a real-life meetup 🤝
 - `/suggestions` — Submit ideas for the server 💡
-- `/tank` — Send a user to the tank (mod) 🐟
 
